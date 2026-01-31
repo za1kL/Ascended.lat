@@ -376,6 +376,51 @@
     </div>
 
     <script>
+        // F12 DevTools Detection
+        (function() {
+            const devtoolsDetected = () => {
+                console.clear();
+                console.log('%cid rather you not be here but its wtv if you wanna bypass', 
+                    'color: #e0f0ff; font-size: 16px; font-family: JetBrains Mono, monospace; text-shadow: 0 0 10px #e0f0ff;');
+            };
+
+            // Detect by checking console size
+            let devtools = { open: false };
+            const threshold = 160;
+
+            const checkDevTools = () => {
+                if (window.outerWidth - window.innerWidth > threshold || 
+                    window.outerHeight - window.innerHeight > threshold) {
+                    if (!devtools.open) {
+                        devtools.open = true;
+                        devtoolsDetected();
+                    }
+                } else {
+                    devtools.open = false;
+                }
+            };
+
+            // Check on F12 key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                    (e.metaKey && e.altKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))) {
+                    devtoolsDetected();
+                }
+            });
+
+            // Check on right click (inspect element)
+            document.addEventListener('contextmenu', () => {
+                setTimeout(checkDevTools, 100);
+            });
+
+            // Periodic check
+            setInterval(checkDevTools, 1000);
+
+            // Initial check
+            checkDevTools();
+        })();
+
         // 3D card tilt effect
         const card = document.getElementById('card');
         
@@ -511,12 +556,15 @@
                 hour12: true 
             });
             
-            // Calculate time difference
-            const userOffset = -now.getTimezoneOffset();
-            const za1kDate = new Date(now.toLocaleString('en-US', { timeZone: za1kTimezone }));
-            const za1kOffset = (za1kDate.getTime() - now.getTime()) / 1000 / 60 + userOffset;
+            // Calculate time difference (fixed version)
+            const userDate = new Date();
+            const za1kDate = new Date(userDate.toLocaleString('en-US', { timeZone: za1kTimezone }));
             
-            const totalMinutes = Math.abs(Math.round(za1kOffset));
+            // Get the difference in milliseconds and convert to minutes
+            const diffMs = userDate.getTime() - za1kDate.getTime();
+            const diffMinutes = Math.round(diffMs / 1000 / 60);
+            
+            const totalMinutes = Math.abs(diffMinutes);
             const hours = Math.floor(totalMinutes / 60);
             const minutes = totalMinutes % 60;
             
