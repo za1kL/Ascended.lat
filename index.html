@@ -1,32 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ascended</title>
     <style>
-        body { 
-            background: #000; 
-            color: #333; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            font-family: monospace; 
-        }
-        /* Full size box based on the roof down as requested */
-        .container {
-            width: 100%;
+        /* Ensures the container starts from the roof down and fills the box */
+        html, body {
+            margin: 0;
+            padding: 0;
             height: 100%;
+            background-color: #000;
+            color: #1a1a1a; /* Very dark grey text so it's barely visible */
+            font-family: monospace;
+            overflow: hidden;
+        }
+
+        .full-size-box {
             display: flex;
-            flex-direction: column;
             justify-content: center;
-            text-align: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh; /* Full viewport height */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <p>HTTP 403 - Forbidden</p>
+    <div class="full-size-box">
+        <p>403 | Forbidden</p>
     </div>
 </body>
 </html>
