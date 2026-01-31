@@ -323,8 +323,8 @@
             const cardCenterX = rect.left + rect.width / 2;
             const cardCenterY = rect.top + rect.height / 2;
             
-            const angleX = (e.clientY - cardCenterY) / 20;
-            const angleY = (cardCenterX - e.clientX) / 20;
+            const angleX = (e.clientY - cardCenterY) / 40;
+            const angleY = (cardCenterX - e.clientX) / 40;
             
             card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
         });
