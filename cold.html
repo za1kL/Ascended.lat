@@ -23,6 +23,11 @@
 
         body {
             background: var(--bg);
+            background-image: url('https://i.ibb.co/gMz55jG9/Screenshot-2026-02-01-223349.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             font-family: 'JetBrains Mono', monospace;
             height: 100vh;
             display: flex;
@@ -30,23 +35,6 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-        }
-
-        /* Background image with overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://i.ibb.co/gMz55jG9/Screenshot-2026-02-01-223349.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.15;
-            z-index: 0;
-            pointer-events: none;
         }
 
         /* Dark overlay for better contrast */
@@ -57,7 +45,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.85));
+            background: rgba(0, 0, 0, 0.5);
             z-index: 0;
             pointer-events: none;
         }
@@ -74,27 +62,30 @@
 
         .leaf {
             position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--sage);
-            opacity: 0.4;
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            animation: fall 15s linear infinite;
+            width: 4px;
+            height: 4px;
+            background: rgba(180, 190, 185, 0.8);
+            opacity: 0;
+            border-radius: 50%;
+            animation: snowfall 12s linear infinite;
         }
 
-        @keyframes fall {
+        @keyframes snowfall {
             0% {
-                transform: translateY(-100px) rotate(0deg);
+                transform: translateY(-20px) translateX(0) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.4;
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.8;
             }
             90% {
                 opacity: 0.4;
             }
             100% {
-                transform: translateY(100vh) rotate(360deg);
+                transform: translateY(100vh) translateX(100px) rotate(360deg);
                 opacity: 0;
             }
         }
@@ -564,17 +555,21 @@
         }
         animateMist();
 
-        // Create falling leaves
+        // Create falling snow-like particles
         const leavesContainer = document.createElement('div');
         leavesContainer.className = 'leaves';
         document.body.insertBefore(leavesContainer, document.body.firstChild);
         
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 100; i++) {
             const leaf = document.createElement('div');
             leaf.className = 'leaf';
             leaf.style.left = Math.random() * 100 + '%';
-            leaf.style.animationDelay = Math.random() * 15 + 's';
-            leaf.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            leaf.style.animationDelay = Math.random() * 12 + 's';
+            leaf.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            // Vary the size slightly
+            const size = Math.random() * 2 + 3;
+            leaf.style.width = size + 'px';
+            leaf.style.height = size + 'px';
             leavesContainer.appendChild(leaf);
         }
 
