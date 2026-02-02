@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coldz - Ascended</title>
+    <title>Coldz</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/C3tBc4MN/Da-logo.png">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -30,6 +30,36 @@
             align-items: center;
             overflow: hidden;
             position: relative;
+        }
+
+        /* Background image with overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.ibb.co/gMz55jG9/Screenshot-2026-02-01-223349.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Dark overlay for better contrast */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.85));
+            z-index: 0;
+            pointer-events: none;
         }
 
         /* Forest leaves background */
@@ -386,7 +416,7 @@
         <div class="profile-header">
             <div class="avatar-container">
                 <div class="avatar-glow"></div>
-                <img src="https://i.ibb.co/gMz55jG9/Screenshot-2026-02-01-223349.png" alt="Coldz" class="avatar">
+                <img src="https://i.ibb.co/XfXPGQy4/Screenshot-2026-02-01-222942.png" alt="Coldz" class="avatar">
             </div>
             <div class="info">
                 <div class="username">Coldz</div>
@@ -576,7 +606,7 @@
         });
 
         // Timezone checker
-        const coldzTimezone = 'America/New_York'; // Change this to Coldz's actual timezone
+        const coldzTimezone = 'America/Chicago'; // Changed to Central Time (1 hour behind Eastern)
 
         function updateTimezones() {
             const now = new Date();
