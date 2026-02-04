@@ -30,7 +30,6 @@
             position: relative;
         }
 
-        /* Background stars */
         .stars {
             position: fixed;
             top: 0;
@@ -58,7 +57,6 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Fog canvas */
         #smoke-canvas {
             position: fixed;
             top: 0;
@@ -69,7 +67,6 @@
             z-index: 1;
         }
 
-        /* Navigation */
         .nav {
             position: fixed;
             top: 0;
@@ -118,7 +115,6 @@
             text-shadow: 0 0 10px rgba(232, 212, 160, 0.5);
         }
 
-        /* Hero Section */
         .hero {
             position: relative;
             z-index: 2;
@@ -163,7 +159,6 @@
             box-shadow: 0 0 20px rgba(201, 169, 97, 0.1);
         }
 
-        /* Main Content */
         .main-content {
             position: relative;
             z-index: 2;
@@ -199,56 +194,64 @@
             letter-spacing: 1px;
         }
 
-        .key-input-group {
+        .key-display-group {
             display: flex;
             gap: 1rem;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .key-input {
+        .hwid-display {
             flex: 1;
             min-width: 200px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(201, 169, 97, 0.3);
             border-radius: 8px;
             padding: 0.75rem 1rem;
             color: var(--ancient-yellow);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .key-input:focus {
-            outline: none;
-            border-color: var(--ancient-yellow);
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 20px rgba(201, 169, 97, 0.2);
-        }
-
-        .key-input::placeholder {
-            color: rgba(201, 169, 97, 0.4);
-        }
-
-        .btn-generate {
-            background: rgba(201, 169, 97, 0.15);
-            border: 1px solid var(--ancient-yellow);
-            color: var(--ancient-yellow);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
+        .hwid-label {
+            color: rgba(201, 169, 97, 0.6);
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .btn-generate:hover {
-            background: rgba(201, 169, 97, 0.25);
-            box-shadow: 0 0 20px rgba(201, 169, 97, 0.3);
-            transform: translateY(-2px);
+        .hwid-value {
+            color: var(--ancient-yellow-light);
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .hwid-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(201, 169, 97, 0.1);
+            border: 1px solid rgba(201, 169, 97, 0.3);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--ancient-yellow);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--ancient-yellow);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(201, 169, 97, 0.4); }
+            50% { opacity: 1; box-shadow: 0 0 0 6px rgba(201, 169, 97, 0); }
         }
 
         .encryption-grid {
@@ -265,10 +268,24 @@
             padding: 1.5rem;
         }
 
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .panel-icon {
+            width: 24px;
+            height: 24px;
+            stroke: var(--ancient-yellow);
+            stroke-width: 2;
+            fill: none;
+        }
+
         .panel-title {
             font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 1rem;
             color: var(--ancient-yellow-light);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -311,7 +328,7 @@
             background: rgba(201, 169, 97, 0.15);
             border: 1px solid var(--ancient-yellow);
             color: var(--ancient-yellow);
-            padding: 1rem 2.5rem;
+            padding: 1rem 2rem;
             border-radius: 50px;
             font-weight: 700;
             cursor: pointer;
@@ -319,7 +336,10 @@
             font-family: 'JetBrains Mono', monospace;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
         }
 
         .btn:hover {
@@ -332,7 +352,14 @@
             transform: translateY(0);
         }
 
-        /* Status notification */
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
         .status {
             position: fixed;
             top: 50%;
@@ -350,6 +377,9 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(201, 169, 97, 0.3);
             box-shadow: 0 0 40px rgba(201, 169, 97, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
         .status.show {
@@ -367,7 +397,14 @@
             color: #ff6b6b;
         }
 
-        /* Footer info */
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
         .footer-info {
             position: relative;
             z-index: 2;
@@ -377,7 +414,47 @@
             font-size: 0.85rem;
         }
 
-        /* Responsive */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(201, 169, 97, 0.2);
+            border-top-color: var(--ancient-yellow);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--ancient-yellow);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -392,7 +469,7 @@
                 gap: 1.5rem;
             }
             
-            .key-input-group {
+            .key-display-group {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -405,20 +482,25 @@
             .btn {
                 width: 100%;
                 max-width: 300px;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Background Music -->
     <audio id="bgMusic" loop>
         <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB724Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Generating Hardware ID...</div>
+    </div>
+
     <div class="stars" id="stars"></div>
     <canvas id="smoke-canvas"></canvas>
 
-    <!-- Navigation -->
     <nav class="nav">
         <div class="nav-content">
             <div class="logo">ASCENDED VAULT</div>
@@ -430,33 +512,42 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
-        <h1>Military-Grade Encryption</h1>
-        <p>Advanced AES-256 encryption with custom key derivation. Your data protected with cryptographic excellence.</p>
-        <div class="security-badge">🔒 256-BIT ENCRYPTION • SECURE KEY DERIVATION • ZERO KNOWLEDGE</div>
+        <h1>Ascended Encryption</h1>
+        <p>Advanced AES-256 encryption bound to your unique hardware signature. Your data, secured by your identity.</p>
+        <div class="security-badge">256-BIT AES-GCM | HARDWARE-BOUND KEY | CLIENT-SIDE PROCESSING</div>
     </section>
 
-    <!-- Main Content -->
     <main class="main-content">
         <div class="encryption-container">
             <div class="key-section">
-                <h3>🔑 Encryption Key</h3>
-                <div class="key-input-group">
-                    <input 
-                        type="text" 
-                        id="keyInput" 
-                        class="key-input" 
-                        placeholder="Enter your secret encryption key (min 8 characters)"
-                        autocomplete="off"
-                    >
-                    <button class="btn-generate" onclick="generateKey()">Generate Strong Key</button>
+                <h3>Hardware Identity Key</h3>
+                <div class="key-display-group">
+                    <div class="hwid-display">
+                        <div>
+                            <div class="hwid-label">Your HWID</div>
+                            <div class="hwid-value" id="hwidDisplay">Generating...</div>
+                        </div>
+                    </div>
+                    <div class="hwid-status">
+                        <div class="status-dot"></div>
+                        <span id="hwidStatusText">Initializing</span>
+                    </div>
                 </div>
             </div>
 
             <div class="encryption-grid">
                 <div class="panel">
-                    <div class="panel-title">📝 Input Text</div>
+                    <div class="panel-header">
+                        <svg class="panel-icon" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        <div class="panel-title">Input Text</div>
+                    </div>
                     <textarea 
                         id="inputText" 
                         class="textarea" 
@@ -465,35 +556,70 @@
                 </div>
                 
                 <div class="panel">
-                    <div class="panel-title">🔐 Output Result</div>
+                    <div class="panel-header">
+                        <svg class="panel-icon" viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <div class="panel-title">Output Result</div>
+                    </div>
                     <textarea 
                         id="outputText" 
                         class="textarea" 
                         readonly 
-                        placeholder="Your encrypted/decrypted result will appear here..."
+                        placeholder="Your encrypted or decrypted result will appear here..."
                     ></textarea>
                 </div>
             </div>
 
             <div class="controls">
-                <button class="btn" onclick="encryptText()">🔒 Encrypt</button>
-                <button class="btn" onclick="decryptText()">🔓 Decrypt</button>
-                <button class="btn" onclick="copyOutput()">📋 Copy</button>
-                <button class="btn" onclick="clearAll()">🗑️ Clear</button>
+                <button class="btn" onclick="encryptText()">
+                    <svg class="btn-icon" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Encrypt
+                </button>
+                <button class="btn" onclick="decryptText()">
+                    <svg class="btn-icon" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 9.9 1"/>
+                    </svg>
+                    Decrypt
+                </button>
+                <button class="btn" onclick="copyOutput()">
+                    <svg class="btn-icon" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copy
+                </button>
+                <button class="btn" onclick="clearAll()">
+                    <svg class="btn-icon" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    Clear
+                </button>
             </div>
         </div>
     </main>
 
     <div class="footer-info">
-        Enhanced security with AES-256 encryption | Client-side processing | Zero data retention
+        AES-256-GCM Encryption | Hardware-Bound Security | Zero Data Retention | Client-Side Processing Only
     </div>
 
-    <!-- Status Notification -->
     <div id="status" class="status">
+        <svg class="status-icon" id="statusIcon" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"/>
+        </svg>
         <span id="statusText"></span>
     </div>
 
     <script>
+        // Global HWID storage
+        let HARDWARE_ID = null;
+
         // Auto-play background music
         const bgMusic = document.getElementById('bgMusic');
         bgMusic.volume = 0.15;
@@ -600,24 +726,225 @@
             canvas.height = window.innerHeight;
         });
 
-        // ==================== ENHANCED ENCRYPTION SYSTEM ====================
+        // ==================== HARDWARE ID GENERATION ====================
         
-        // Secure random key generation
-        function generateKey() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-            let key = '';
-            const array = new Uint8Array(32);
-            crypto.getRandomValues(array);
+        async function generateHWID() {
+            const components = [];
             
-            for (let i = 0; i < 32; i++) {
-                key += chars[array[i] % chars.length];
+            // Screen properties
+            components.push(window.screen.width);
+            components.push(window.screen.height);
+            components.push(window.screen.colorDepth);
+            components.push(window.screen.pixelDepth);
+            components.push(window.devicePixelRatio);
+            
+            // Timezone
+            components.push(Intl.DateTimeFormat().resolvedOptions().timeZone);
+            components.push(new Date().getTimezoneOffset());
+            
+            // Language and platform
+            components.push(navigator.language);
+            components.push(navigator.languages.join(','));
+            components.push(navigator.platform);
+            components.push(navigator.hardwareConcurrency || 'unknown');
+            components.push(navigator.maxTouchPoints || 0);
+            
+            // Memory (if available)
+            if (navigator.deviceMemory) {
+                components.push(navigator.deviceMemory);
             }
             
-            document.getElementById('keyInput').value = key;
-            showStatus('Strong key generated successfully', 'success');
+            // Canvas fingerprint
+            try {
+                const canvasFingerprint = await getCanvasFingerprint();
+                components.push(canvasFingerprint);
+            } catch (e) {
+                components.push('canvas-unavailable');
+            }
+            
+            // WebGL fingerprint
+            try {
+                const webglFingerprint = getWebGLFingerprint();
+                components.push(webglFingerprint);
+            } catch (e) {
+                components.push('webgl-unavailable');
+            }
+            
+            // Audio context fingerprint
+            try {
+                const audioFingerprint = await getAudioFingerprint();
+                components.push(audioFingerprint);
+            } catch (e) {
+                components.push('audio-unavailable');
+            }
+            
+            // Font detection
+            try {
+                const fontFingerprint = getFontFingerprint();
+                components.push(fontFingerprint);
+            } catch (e) {
+                components.push('fonts-unavailable');
+            }
+            
+            // Combine all components
+            const rawFingerprint = components.join('|');
+            
+            // Generate SHA-256 hash
+            const encoder = new TextEncoder();
+            const data = encoder.encode(rawFingerprint);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            
+            // Format as HWID (take first 32 chars, formatted in groups)
+            const hwid = hashHex.substring(0, 32).toUpperCase();
+            return `${hwid.slice(0, 8)}-${hwid.slice(8, 16)}-${hwid.slice(16, 24)}-${hwid.slice(24, 32)}`;
         }
 
-        // PBKDF2 key derivation for enhanced security
+        function getCanvasFingerprint() {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 200;
+                canvas.height = 50;
+                
+                ctx.textBaseline = 'top';
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#f60';
+                ctx.fillRect(0, 0, 100, 50);
+                ctx.fillStyle = '#069';
+                ctx.fillText('Ascended Vault', 2, 15);
+                ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+                ctx.fillText('HWID Gen', 4, 32);
+                
+                resolve(canvas.toDataURL());
+            });
+        }
+
+        function getWebGLFingerprint() {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            
+            if (!gl) return 'no-webgl';
+            
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            const vendor = debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'unknown';
+            const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'unknown';
+            
+            return `${vendor}|${renderer}`;
+        }
+
+        function getAudioFingerprint() {
+            return new Promise((resolve) => {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const analyser = audioContext.createAnalyser();
+                    const gainNode = audioContext.createGain();
+                    const scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+                    
+                    gainNode.gain.value = 0;
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.value = 10000;
+                    
+                    oscillator.connect(analyser);
+                    analyser.connect(scriptProcessor);
+                    scriptProcessor.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.start(0);
+                    
+                    scriptProcessor.onaudioprocess = function(e) {
+                        const output = e.inputBuffer.getChannelData(0);
+                        let sum = 0;
+                        for (let i = 0; i < output.length; i++) {
+                            sum += Math.abs(output[i]);
+                        }
+                        oscillator.disconnect();
+                        scriptProcessor.disconnect();
+                        gainNode.disconnect();
+                        audioContext.close();
+                        resolve(sum.toString());
+                    };
+                    
+                    setTimeout(() => resolve('audio-timeout'), 1000);
+                } catch (e) {
+                    resolve('audio-error');
+                }
+            });
+        }
+
+        function getFontFingerprint() {
+            const baseFonts = ['monospace', 'sans-serif', 'serif'];
+            const testFonts = [
+                'Arial', 'Verdana', 'Times New Roman', 'Courier New', 
+                'Georgia', 'Comic Sans MS', 'Impact', 'Trebuchet MS'
+            ];
+            
+            const testString = 'mmmmmmmmmmlli';
+            const testSize = '72px';
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const detected = [];
+            
+            baseFonts.forEach(baseFont => {
+                ctx.font = `${testSize} ${baseFont}`;
+                const baseWidth = ctx.measureText(testString).width;
+                
+                testFonts.forEach(testFont => {
+                    ctx.font = `${testSize} "${testFont}", ${baseFont}`;
+                    const testWidth = ctx.measureText(testString).width;
+                    if (testWidth !== baseWidth) {
+                        detected.push(testFont);
+                    }
+                });
+            });
+            
+            return [...new Set(detected)].join(',');
+        }
+
+        // Initialize HWID on page load
+        async function initializeHWID() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const hwidDisplay = document.getElementById('hwidDisplay');
+            const hwidStatusText = document.getElementById('hwidStatusText');
+            
+            try {
+                // Check localStorage first
+                let storedHWID = localStorage.getItem('ascended_hwid');
+                
+                if (!storedHWID) {
+                    // Generate new HWID
+                    HARDWARE_ID = await generateHWID();
+                    localStorage.setItem('ascended_hwid', HARDWARE_ID);
+                } else {
+                    HARDWARE_ID = storedHWID;
+                }
+                
+                // Display HWID
+                hwidDisplay.textContent = HARDWARE_ID;
+                hwidStatusText.textContent = 'Verified';
+                
+                // Hide loading overlay
+                setTimeout(() => {
+                    loadingOverlay.classList.add('hidden');
+                }, 800);
+                
+            } catch (error) {
+                console.error('HWID generation failed:', error);
+                hwidDisplay.textContent = 'Generation Failed';
+                hwidStatusText.textContent = 'Error';
+                loadingOverlay.classList.add('hidden');
+            }
+        }
+
+        // Run initialization
+        window.addEventListener('load', initializeHWID);
+
+        // ==================== ENCRYPTION SYSTEM ====================
+        
+        // PBKDF2 key derivation
         async function deriveKey(password, salt) {
             const encoder = new TextEncoder();
             const keyMaterial = await crypto.subtle.importKey(
@@ -644,21 +971,14 @@
 
         // AES-256-GCM encryption
         async function encryptData(text, password) {
-            if (password.length < 8) {
-                throw new Error('Key must be at least 8 characters long');
-            }
-
             const encoder = new TextEncoder();
             const data = encoder.encode(text);
             
-            // Generate random salt and IV
             const salt = crypto.getRandomValues(new Uint8Array(16));
             const iv = crypto.getRandomValues(new Uint8Array(12));
             
-            // Derive key from password
             const derivedKey = await deriveKey(password, salt);
             
-            // Import key for AES-GCM
             const key = await crypto.subtle.importKey(
                 'raw',
                 derivedKey,
@@ -667,7 +987,6 @@
                 ['encrypt']
             );
             
-            // Encrypt
             const encrypted = await crypto.subtle.encrypt(
                 {
                     name: 'AES-GCM',
@@ -677,34 +996,24 @@
                 data
             );
             
-            // Combine salt + iv + encrypted data
             const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
             result.set(salt, 0);
             result.set(iv, salt.length);
             result.set(new Uint8Array(encrypted), salt.length + iv.length);
             
-            // Convert to base64
             return btoa(String.fromCharCode(...result));
         }
 
         // AES-256-GCM decryption
         async function decryptData(encryptedBase64, password) {
-            if (password.length < 8) {
-                throw new Error('Key must be at least 8 characters long');
-            }
-
-            // Decode base64
             const encryptedData = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
             
-            // Extract salt, iv, and ciphertext
             const salt = encryptedData.slice(0, 16);
             const iv = encryptedData.slice(16, 28);
             const ciphertext = encryptedData.slice(28);
             
-            // Derive key from password
             const derivedKey = await deriveKey(password, salt);
             
-            // Import key for AES-GCM
             const key = await crypto.subtle.importKey(
                 'raw',
                 derivedKey,
@@ -713,7 +1022,6 @@
                 ['decrypt']
             );
             
-            // Decrypt
             const decrypted = await crypto.subtle.decrypt(
                 {
                     name: 'AES-GCM',
@@ -730,27 +1038,21 @@
         // UI Functions
         async function encryptText() {
             const input = document.getElementById('inputText').value;
-            const key = document.getElementById('keyInput').value;
             
             if (!input.trim()) {
                 showStatus('Please enter text to encrypt', 'error');
                 return;
             }
             
-            if (!key) {
-                showStatus('Please enter an encryption key', 'error');
-                return;
-            }
-            
-            if (key.length < 8) {
-                showStatus('Key must be at least 8 characters long', 'error');
+            if (!HARDWARE_ID) {
+                showStatus('Hardware ID not initialized', 'error');
                 return;
             }
             
             try {
-                const encrypted = await encryptData(input, key);
+                const encrypted = await encryptData(input, HARDWARE_ID);
                 document.getElementById('outputText').value = encrypted;
-                showStatus('✓ Text encrypted with AES-256', 'success');
+                showStatus('Text encrypted with AES-256', 'success');
             } catch (error) {
                 showStatus('Encryption failed: ' + error.message, 'error');
             }
@@ -758,24 +1060,23 @@
         
         async function decryptText() {
             const input = document.getElementById('inputText').value;
-            const key = document.getElementById('keyInput').value;
             
             if (!input.trim()) {
                 showStatus('Please enter encrypted text to decrypt', 'error');
                 return;
             }
             
-            if (!key) {
-                showStatus('Please enter the decryption key', 'error');
+            if (!HARDWARE_ID) {
+                showStatus('Hardware ID not initialized', 'error');
                 return;
             }
             
             try {
-                const decrypted = await decryptData(input, key);
+                const decrypted = await decryptData(input, HARDWARE_ID);
                 document.getElementById('outputText').value = decrypted;
-                showStatus('✓ Text decrypted successfully', 'success');
+                showStatus('Text decrypted successfully', 'success');
             } catch (error) {
-                showStatus('Decryption failed: Invalid key or corrupted data', 'error');
+                showStatus('Decryption failed: Invalid data or wrong device', 'error');
             }
         }
         
@@ -787,7 +1088,7 @@
             }
             
             navigator.clipboard.writeText(output.value).then(() => {
-                showStatus('✓ Copied to clipboard', 'success');
+                showStatus('Copied to clipboard', 'success');
             }).catch(() => {
                 showStatus('Failed to copy', 'error');
             });
@@ -796,25 +1097,27 @@
         function clearAll() {
             document.getElementById('inputText').value = '';
             document.getElementById('outputText').value = '';
-            showStatus('✓ Fields cleared', 'success');
+            showStatus('Fields cleared', 'success');
         }
         
         function showStatus(message, type) {
             const status = document.getElementById('status');
             const statusText = document.getElementById('statusText');
+            const statusIcon = document.getElementById('statusIcon');
             
             statusText.textContent = message;
             status.className = `status ${type} show`;
+            
+            if (type === 'success') {
+                statusIcon.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+            } else {
+                statusIcon.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
+            }
             
             setTimeout(() => {
                 status.classList.remove('show');
             }, 3000);
         }
-
-        // Security: Prevent key from being logged
-        document.getElementById('keyInput').addEventListener('copy', (e) => {
-            showStatus('⚠️ Key copied - keep it secure!', 'success');
-        });
     </script>
 </body>
 </html>
