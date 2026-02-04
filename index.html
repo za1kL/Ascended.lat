@@ -266,7 +266,7 @@
 </head>
 <body>
     <!-- Background Music -->
-    <audio id="bgMusic" loop autoplay>
+    <audio id="bgMusic" loop>
         <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB424Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
     </audio>
 
@@ -275,7 +275,7 @@
 
     <div class="container">
         <div class="logo-container">
-            <img src="https://i.ibb.co/PzsHQ1bV/Screenshot-2026-02-04-013331-removebg-preview.png" alt="Ascended" class="logo">
+            <img src="https://i.ibb.co/PzsHQ1bV/Screenshot-2026-02-04-013331-removebg-preview.png" alt="Ascended" class="logo" onclick="play()" style="cursor: pointer;">
         </div>
 
         <div class="info-section">
@@ -287,10 +287,11 @@
     </div>
 
     <script>
-        // Auto-play background music
-        const bgMusic = document.getElementById('bgMusic');
-        bgMusic.volume = 0.3; // Set default volume to 30%
-        bgMusic.play();
+        function play(){
+            var audio = document.getElementById("bgMusic");
+            audio.volume = 0.3;
+            audio.play();
+        }
 
         // Create yellow twinkling stars
         const starsContainer = document.getElementById('stars');
