@@ -241,6 +241,58 @@
             text-align: center;
         }
 
+        /* Play Button */
+        .play-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            padding: 15px 30px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid var(--ancient-yellow);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 30px rgba(201, 169, 97, 0.3),
+                inset 0 0 20px rgba(201, 169, 97, 0.05);
+            color: var(--ancient-yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-button:hover {
+            background: rgba(201, 169, 97, 0.1);
+            border-color: var(--ancient-yellow-light);
+            color: var(--ancient-yellow-light);
+            box-shadow: 
+                0 0 40px rgba(201, 169, 97, 0.5),
+                inset 0 0 30px rgba(201, 169, 97, 0.1);
+            transform: scale(1.05);
+        }
+
+        .play-button.playing {
+            border-color: #4ade80;
+            color: #4ade80;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 30px rgba(74, 222, 128, 0.3),
+                    inset 0 0 20px rgba(74, 222, 128, 0.05);
+            }
+            50% {
+                box-shadow: 
+                    0 0 40px rgba(74, 222, 128, 0.5),
+                    inset 0 0 30px rgba(74, 222, 128, 0.1);
+            }
+        }
+
         /* Enhanced particles */
         .particle {
             position: fixed;
@@ -345,6 +397,13 @@
                 padding: 12px 15px;
                 min-width: 160px;
             }
+
+            .play-button {
+                top: 10px;
+                right: 10px;
+                padding: 12px 20px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -353,6 +412,9 @@
     <audio id="bgMusic" loop>
         <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB424Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Play Button -->
+    <button class="play-button" id="playButton">▶ Play Music</button>
 
     <!-- Volume Control - TOP LEFT -->
     <div class="volume-control">
@@ -378,9 +440,51 @@
     </div>
 
     <script>
-        // Auto-play background music with user interaction
+        // Background music and audio setup
         const bgMusic = document.getElementById('bgMusic');
-        bgMusic.volume = 0.3; // Set volume to 30%
+        const playButton = document.getElementById('playButton');
+        bgMusic.volume = 0.3;
+        
+        // Audio Analysis Setup
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        
+        let audioSource = null;
+        let isPlaying = false;
+        
+        // Play/Pause button handler
+        playButton.addEventListener('click', async () => {
+            try {
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                if (!isPlaying) {
+                    await bgMusic.play();
+                    
+                    if (!audioSource) {
+                        audioSource = audioContext.createMediaElementSource(bgMusic);
+                        audioSource.connect(analyser);
+                        analyser.connect(audioContext.destination);
+                    }
+                    
+                    playButton.textContent = '⏸ Pause Music';
+                    playButton.classList.add('playing');
+                    isPlaying = true;
+                } else {
+                    bgMusic.pause();
+                    playButton.textContent = '▶ Play Music';
+                    playButton.classList.remove('playing');
+                    isPlaying = false;
+                }
+            } catch (error) {
+                console.error('Audio error:', error);
+                playButton.textContent = '⚠ Audio Error';
+            }
+        });
         
         // Volume slider control
         const volumeSlider = document.getElementById('volumeSlider');
@@ -392,86 +496,28 @@
             volumeValue.textContent = e.target.value + '%';
         });
         
-        // Audio Analysis Setup
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256;
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        
-        let audioSource = null;
-        
-        // Try to autoplay, if blocked, play on first user interaction
-        const playMusic = async () => {
-            try {
-                // Resume audio context if it's suspended
-                if (audioContext.state === 'suspended') {
-                    await audioContext.resume();
-                }
-                
-                await bgMusic.play();
-                
-                // Connect audio to analyser if not already connected
-                if (!audioSource) {
-                    audioSource = audioContext.createMediaElementSource(bgMusic);
-                    audioSource.connect(analyser);
-                    analyser.connect(audioContext.destination);
-                }
-            } catch (error) {
-                console.log('Autoplay blocked, waiting for user interaction...');
-                // If autoplay is blocked, play on first click/touch/keypress
-                const startAudio = async () => {
-                    try {
-                        if (audioContext.state === 'suspended') {
-                            await audioContext.resume();
-                        }
-                        
-                        await bgMusic.play();
-                        
-                        if (!audioSource) {
-                            audioSource = audioContext.createMediaElementSource(bgMusic);
-                            audioSource.connect(analyser);
-                            analyser.connect(audioContext.destination);
-                        }
-                    } catch (err) {
-                        console.error('Audio play error:', err);
-                    }
-                };
-                
-                document.addEventListener('click', startAudio, { once: true });
-                document.addEventListener('touchstart', startAudio, { once: true });
-                document.addEventListener('keydown', startAudio, { once: true });
-            }
-        };
-        
         // Get audio intensity (bass/low frequencies)
         function getAudioIntensity() {
             analyser.getByteFrequencyData(dataArray);
             
-            // Get average of lower frequencies (bass)
             let bass = 0;
             for (let i = 0; i < bufferLength / 4; i++) {
                 bass += dataArray[i];
             }
             bass = bass / (bufferLength / 4);
             
-            // Get average of mid frequencies
             let mid = 0;
             for (let i = bufferLength / 4; i < bufferLength / 2; i++) {
                 mid += dataArray[i];
             }
             mid = mid / (bufferLength / 4);
             
-            // Normalize to 0-1 range
             return {
                 bass: bass / 255,
                 mid: mid / 255,
                 overall: (bass + mid) / 2 / 255
             };
         }
-        
-        // Attempt to play when page loads
-        window.addEventListener('load', playMusic);
 
         // Create yellow twinkling stars
         const starsContainer = document.getElementById('stars');
@@ -501,14 +547,14 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = canvas.height + 100;
-                this.maxSize = Math.random() * 300 + 200; // Maximum size at peak
-                this.size = 0; // Start at 0
+                this.maxSize = Math.random() * 300 + 200;
+                this.size = 0;
                 this.speedY = Math.random() * 0.3 + 0.1;
                 this.speedX = (Math.random() - 0.5) * 0.2;
                 this.maxOpacity = Math.random() * 0.08 + 0.04;
                 this.life = 0;
                 this.maxLife = Math.random() * 600 + 400;
-                this.peakLife = this.maxLife * 0.5; // Peak at 50% of lifetime
+                this.peakLife = this.maxLife * 0.5;
             }
 
             update() {
@@ -516,17 +562,13 @@
                 this.x += this.speedX;
                 this.life++;
                 
-                // Calculate lifecycle ratio
                 const lifeRatio = this.life / this.maxLife;
                 
-                // Fade in and grow during first half, fade out and shrink during second half
                 if (this.life < this.peakLife) {
-                    // Growing phase - fade in
                     const growRatio = this.life / this.peakLife;
                     this.size = this.maxSize * growRatio;
                     this.opacity = this.maxOpacity * growRatio;
                 } else {
-                    // Shrinking phase - fade out
                     const shrinkRatio = (this.maxLife - this.life) / (this.maxLife - this.peakLife);
                     this.size = this.maxSize * shrinkRatio;
                     this.opacity = this.maxOpacity * shrinkRatio;
@@ -538,7 +580,6 @@
             }
 
             draw(audioIntensity = 0.5) {
-                // Boost opacity based on audio intensity
                 const boostedOpacity = this.opacity * (1 + audioIntensity * 0.8);
                 
                 const gradient = ctx.createRadialGradient(
@@ -546,7 +587,6 @@
                     this.x, this.y, this.size
                 );
                 
-                // Ancient yellow gradient with current opacity boosted by audio
                 gradient.addColorStop(0, `rgba(201, 169, 97, ${boostedOpacity})`);
                 gradient.addColorStop(0.3, `rgba(232, 212, 160, ${boostedOpacity * 0.8})`);
                 gradient.addColorStop(0.6, `rgba(166, 136, 69, ${boostedOpacity * 0.5})`);
@@ -559,7 +599,6 @@
             }
         }
 
-        // Increased fog particles from 35 to 60
         const fogParticles = [];
         for (let i = 0; i < 60; i++) {
             fogParticles.push(new FogParticle());
@@ -568,7 +607,6 @@
         function animateFog() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Get audio intensity
             const audioData = getAudioIntensity();
             
             fogParticles.forEach(particle => {
@@ -576,15 +614,12 @@
                 particle.draw(audioData.overall);
             });
             
-            // Update star brightness based on audio
             const stars = document.querySelectorAll('.star');
             stars.forEach((star, index) => {
-                // Use different frequency ranges for different stars
                 const intensity = index % 2 === 0 ? audioData.bass : audioData.mid;
                 const baseOpacity = 0.2 + (intensity * 0.8);
                 star.style.opacity = baseOpacity;
                 
-                // Pulse size slightly with audio
                 const scale = 0.8 + (intensity * 0.6);
                 star.style.transform = `scale(${scale})`;
             });
@@ -593,7 +628,7 @@
         }
         animateFog();
 
-        // Enhanced floating particles - increased from 15 to 50
+        // Enhanced floating particles
         const particleTypes = ['particle-small', 'particle-medium', 'particle-large'];
         
         for (let i = 0; i < 50; i++) {
@@ -602,7 +637,6 @@
             particle.style.left = Math.random() * 100 + '%';
             particle.style.animationDelay = Math.random() * 15 + 's';
             
-            // Vary animation duration based on particle type
             if (particle.classList.contains('particle-small')) {
                 particle.style.animationDuration = (Math.random() * 4 + 10) + 's';
             } else if (particle.classList.contains('particle-medium')) {
