@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ascended Encryption</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/PzsHQ1bV/Screenshot-2026-02-04-013331-removebg-preview.png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,20 +14,18 @@
         }
 
         :root {
-            --ancient-yellow: #c9a961;
-            --ancient-yellow-light: #e8d4a0;
-            --ancient-yellow-dark: #a68845;
-            --bg: #000000;
-            --bg-panel: rgba(10, 10, 10, 0.8);
+            --gold: #c9a961;
+            --gold-light: #e8d4a0;
+            --gold-dark: #a68845;
+            --bg: #000;
         }
 
         body {
             font-family: 'JetBrains Mono', monospace;
             background: var(--bg);
             min-height: 100vh;
-            color: var(--ancient-yellow);
+            color: var(--gold);
             overflow-x: hidden;
-            position: relative;
         }
 
         .stars {
@@ -42,22 +40,17 @@
 
         .star {
             position: absolute;
-            background: var(--ancient-yellow);
+            background: var(--gold);
             border-radius: 50%;
-            box-shadow: 0 0 8px rgba(201, 169, 97, 0.6);
             animation: twinkle 3s ease-in-out infinite;
         }
 
-        .star-small { width: 2px; height: 2px; }
-        .star-medium { width: 3px; height: 3px; }
-        .star-large { width: 4px; height: 4px; }
-
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
 
-        #smoke-canvas {
+        #fog {
             position: fixed;
             top: 0;
             left: 0;
@@ -72,1051 +65,323 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 1.5rem 2rem;
-            background: rgba(10, 10, 10, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(201, 169, 97, 0.2);
+            padding: 1.2rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 1px solid rgba(201, 169, 97, 0.15);
             z-index: 1000;
-            box-shadow: 0 0 30px rgba(201, 169, 97, 0.1);
-        }
-
-        .nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--ancient-yellow);
-            text-shadow: 0 0 20px rgba(201, 169, 97, 0.6);
-            letter-spacing: 2px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: rgba(201, 169, 97, 0.7);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--ancient-yellow-light);
-            text-shadow: 0 0 10px rgba(232, 212, 160, 0.5);
-        }
-
-        .hero {
-            position: relative;
-            z-index: 2;
-            padding: 8rem 2rem 4rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: clamp(3rem, 8vw, 5rem);
-            font-weight: 900;
-            line-height: 1;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            background: linear-gradient(135deg, var(--ancient-yellow) 0%, var(--ancient-yellow-light) 50%, var(--ancient-yellow-dark) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 40px rgba(201, 169, 97, 0.3);
-            filter: drop-shadow(0 0 40px rgba(201, 169, 97, 0.3));
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: rgba(201, 169, 97, 0.7);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            line-height: 1.6;
-        }
-
-        .security-badge {
-            display: inline-block;
-            background: rgba(201, 169, 97, 0.1);
-            border: 1px solid rgba(201, 169, 97, 0.3);
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            color: var(--ancient-yellow-light);
-            margin-bottom: 3rem;
-            box-shadow: 0 0 20px rgba(201, 169, 97, 0.1);
-        }
-
-        .main-content {
-            position: relative;
-            z-index: 2;
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .encryption-container {
-            background: var(--bg-panel);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(201, 169, 97, 0.2);
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 
-                0 0 40px rgba(201, 169, 97, 0.15),
-                inset 0 0 30px rgba(201, 169, 97, 0.02);
-        }
-
-        .key-section {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: rgba(201, 169, 97, 0.05);
-            border: 1px solid rgba(201, 169, 97, 0.2);
-            border-radius: 12px;
-        }
-
-        .key-section h3 {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            color: var(--ancient-yellow-light);
-            text-transform: uppercase;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold);
             letter-spacing: 1px;
         }
 
-        .key-display-group {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 7rem 1.5rem 2rem;
         }
 
-        .hwid-display {
-            flex: 1;
-            min-width: 200px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(201, 169, 97, 0.3);
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            color: var(--ancient-yellow);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .hwid-label {
-            color: rgba(201, 169, 97, 0.6);
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gold-light);
+        }
+
+        .hwid-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: rgba(201, 169, 97, 0.08);
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 6px;
             font-size: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .hwid-bar span {
+            color: rgba(201, 169, 97, 0.6);
+        }
+
+        .hwid-bar code {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel label {
+            display: block;
+            font-size: 0.75rem;
+            color: rgba(201, 169, 97, 0.6);
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .hwid-value {
-            color: var(--ancient-yellow-light);
-            font-weight: 600;
-            word-break: break-all;
-        }
-
-        .hwid-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(201, 169, 97, 0.1);
-            border: 1px solid rgba(201, 169, 97, 0.3);
-            border-radius: 8px;
-            font-size: 0.8rem;
-            color: var(--ancient-yellow);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--ancient-yellow);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(201, 169, 97, 0.4); }
-            50% { opacity: 1; box-shadow: 0 0 0 6px rgba(201, 169, 97, 0); }
-        }
-
-        .encryption-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .panel {
-            background: rgba(201, 169, 97, 0.03);
-            border: 1px solid rgba(201, 169, 97, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .panel-icon {
-            width: 24px;
-            height: 24px;
-            stroke: var(--ancient-yellow);
-            stroke-width: 2;
-            fill: none;
-        }
-
-        .panel-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--ancient-yellow-light);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .textarea {
+        .panel textarea {
             width: 100%;
-            min-height: 250px;
-            background: rgba(0, 0, 0, 0.4);
+            height: 200px;
+            background: rgba(201, 169, 97, 0.05);
             border: 1px solid rgba(201, 169, 97, 0.2);
-            border-radius: 8px;
-            padding: 1rem;
-            color: var(--ancient-yellow);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
+            border-radius: 6px;
+            padding: 0.8rem;
+            color: var(--gold);
+            font-family: inherit;
+            font-size: 0.8rem;
             resize: vertical;
-            transition: all 0.3s ease;
-            line-height: 1.5;
+            transition: border-color 0.2s;
         }
 
-        .textarea:focus {
+        .panel textarea:focus {
             outline: none;
-            border-color: var(--ancient-yellow);
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 20px rgba(201, 169, 97, 0.2);
+            border-color: var(--gold);
         }
 
-        .textarea::placeholder {
-            color: rgba(201, 169, 97, 0.4);
+        .panel textarea::placeholder {
+            color: rgba(201, 169, 97, 0.3);
         }
 
-        .controls {
+        .buttons {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
+            gap: 0.8rem;
         }
 
         .btn {
-            background: rgba(201, 169, 97, 0.15);
-            border: 1px solid var(--ancient-yellow);
-            color: var(--ancient-yellow);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-weight: 700;
+            background: rgba(201, 169, 97, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.7rem 1.8rem;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
+            transition: all 0.2s;
         }
 
         .btn:hover {
-            background: rgba(201, 169, 97, 0.25);
-            box-shadow: 0 0 30px rgba(201, 169, 97, 0.3);
-            transform: translateY(-2px);
+            background: rgba(201, 169, 97, 0.2);
         }
 
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-icon {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-        }
-
-        .status {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            color: var(--ancient-yellow);
-            padding: 1.5rem 2.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(201, 169, 97, 0.3);
-            box-shadow: 0 0 40px rgba(201, 169, 97, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .status.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .status.success {
-            border-left: 4px solid var(--ancient-yellow);
-        }
-
-        .status.error {
-            border-left: 4px solid #ff6b6b;
-            color: #ff6b6b;
-        }
-
-        .status-icon {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-        }
-
-        .footer-info {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            padding: 3rem 2rem;
-            color: rgba(201, 169, 97, 0.5);
-            font-size: 0.85rem;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 3000;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(201, 169, 97, 0.2);
-            border-top-color: var(--ancient-yellow);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1.5rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: var(--ancient-yellow);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero {
-                padding: 6rem 1rem 2rem;
-            }
-            
-            .encryption-grid {
+        @media (max-width: 600px) {
+            .panels {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
             }
             
-            .key-display-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: center;
+            .buttons {
+                flex-wrap: wrap;
             }
             
             .btn {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
+                flex: 1;
+                min-width: 120px;
             }
         }
     </style>
 </head>
 <body>
-    <audio id="bgMusic" loop>
-        <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB724Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Generating Hardware ID...</div>
-    </div>
-
     <div class="stars" id="stars"></div>
-    <canvas id="smoke-canvas"></canvas>
+    <canvas id="fog"></canvas>
 
     <nav class="nav">
-        <div class="nav-content">
-            <div class="logo">ASCENDED VAULT</div>
-            <ul class="nav-links">
-                <li><a href="#encrypt">Encrypt</a></li>
-                <li><a href="#decrypt">Decrypt</a></li>
-                <li><a href="#security">Security</a></li>
-            </ul>
-        </div>
+        <div class="logo">ASCENDED</div>
     </nav>
 
-    <section class="hero">
-        <h1>Ascended Encryption</h1>
-        <p>Advanced AES-256 encryption bound to your unique hardware signature. Your data, secured by your identity.</p>
-        <div class="security-badge">256-BIT AES-GCM | HARDWARE-BOUND KEY | CLIENT-SIDE PROCESSING</div>
-    </section>
+    <div class="container">
+        <div class="header">
+            <h1>Encryption</h1>
+        </div>
 
-    <main class="main-content">
-        <div class="encryption-container">
-            <div class="key-section">
-                <h3>Hardware Identity Key</h3>
-                <div class="key-display-group">
-                    <div class="hwid-display">
-                        <div>
-                            <div class="hwid-label">Your HWID</div>
-                            <div class="hwid-value" id="hwidDisplay">Generating...</div>
-                        </div>
-                    </div>
-                    <div class="hwid-status">
-                        <div class="status-dot"></div>
-                        <span id="hwidStatusText">Initializing</span>
-                    </div>
-                </div>
+        <div class="hwid-bar">
+            <span>Key:</span>
+            <code id="hwid">loading...</code>
+        </div>
+
+        <div class="panels">
+            <div class="panel">
+                <label>Input</label>
+                <textarea id="input" placeholder="Text to encrypt or decrypt..."></textarea>
             </div>
-
-            <div class="encryption-grid">
-                <div class="panel">
-                    <div class="panel-header">
-                        <svg class="panel-icon" viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10 9 9 9 8 9"/>
-                        </svg>
-                        <div class="panel-title">Input Text</div>
-                    </div>
-                    <textarea 
-                        id="inputText" 
-                        class="textarea" 
-                        placeholder="Enter your text to encrypt or decrypt..."
-                    ></textarea>
-                </div>
-                
-                <div class="panel">
-                    <div class="panel-header">
-                        <svg class="panel-icon" viewBox="0 0 24 24">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                        </svg>
-                        <div class="panel-title">Output Result</div>
-                    </div>
-                    <textarea 
-                        id="outputText" 
-                        class="textarea" 
-                        readonly 
-                        placeholder="Your encrypted or decrypted result will appear here..."
-                    ></textarea>
-                </div>
-            </div>
-
-            <div class="controls">
-                <button class="btn" onclick="encryptText()">
-                    <svg class="btn-icon" viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
-                    Encrypt
-                </button>
-                <button class="btn" onclick="decryptText()">
-                    <svg class="btn-icon" viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0 1 9.9 1"/>
-                    </svg>
-                    Decrypt
-                </button>
-                <button class="btn" onclick="copyOutput()">
-                    <svg class="btn-icon" viewBox="0 0 24 24">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                    </svg>
-                    Copy
-                </button>
-                <button class="btn" onclick="clearAll()">
-                    <svg class="btn-icon" viewBox="0 0 24 24">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    </svg>
-                    Clear
-                </button>
+            <div class="panel">
+                <label>Output</label>
+                <textarea id="output" readonly placeholder="Result..."></textarea>
             </div>
         </div>
-    </main>
 
-    <div class="footer-info">
-        AES-256-GCM Encryption | Hardware-Bound Security | Zero Data Retention | Client-Side Processing Only
-    </div>
-
-    <div id="status" class="status">
-        <svg class="status-icon" id="statusIcon" viewBox="0 0 24 24">
-            <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <span id="statusText"></span>
+        <div class="buttons">
+            <button class="btn" onclick="encrypt()">Encrypt</button>
+            <button class="btn" onclick="decrypt()">Decrypt</button>
+            <button class="btn" onclick="copy()">Copy</button>
+            <button class="btn" onclick="clear()">Clear</button>
+        </div>
     </div>
 
     <script>
-        // Global HWID storage
-        let HARDWARE_ID = null;
-
-        // Auto-play background music
-        const bgMusic = document.getElementById('bgMusic');
-        bgMusic.volume = 0.15;
-        
-        const playMusic = () => {
-            bgMusic.play().catch(() => {
-                document.addEventListener('click', () => bgMusic.play(), { once: true });
-            });
-        };
-        window.addEventListener('load', playMusic);
-
-        // Create stars
-        const starsContainer = document.getElementById('stars');
-        const starSizes = ['star-small', 'star-medium', 'star-large'];
-        
-        for (let i = 0; i < 150; i++) {
+        // Stars
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 80; i++) {
             const star = document.createElement('div');
-            star.className = 'star ' + starSizes[Math.floor(Math.random() * starSizes.length)];
+            star.className = 'star';
+            star.style.width = star.style.height = Math.random() * 2 + 1 + 'px';
             star.style.left = Math.random() * 100 + '%';
             star.style.top = Math.random() * 100 + '%';
             star.style.animationDelay = Math.random() * 3 + 's';
-            star.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            starsContainer.appendChild(star);
+            stars.appendChild(star);
         }
 
-        // Fog effect
-        const canvas = document.getElementById('smoke-canvas');
+        // Fog
+        const canvas = document.getElementById('fog');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
 
-        class FogParticle {
-            constructor() {
-                this.reset();
-            }
+        const particles = Array.from({length: 25}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 150 + 100,
+            dx: (Math.random() - 0.5) * 0.3,
+            dy: (Math.random() - 0.5) * 0.3
+        }));
 
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = canvas.height + 100;
-                this.maxSize = Math.random() * 250 + 150;
-                this.size = 0;
-                this.speedY = Math.random() * 0.25 + 0.1;
-                this.speedX = (Math.random() - 0.5) * 0.15;
-                this.maxOpacity = Math.random() * 0.06 + 0.03;
-                this.life = 0;
-                this.maxLife = Math.random() * 600 + 400;
-                this.peakLife = this.maxLife * 0.5;
-            }
-
-            update() {
-                this.y -= this.speedY;
-                this.x += this.speedX;
-                this.life++;
-                
-                if (this.life < this.peakLife) {
-                    const growRatio = this.life / this.peakLife;
-                    this.size = this.maxSize * growRatio;
-                    this.opacity = this.maxOpacity * growRatio;
-                } else {
-                    const shrinkRatio = (this.maxLife - this.life) / (this.maxLife - this.peakLife);
-                    this.size = this.maxSize * shrinkRatio;
-                    this.opacity = this.maxOpacity * shrinkRatio;
-                }
-                
-                if (this.life > this.maxLife || this.y < -this.maxSize) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                const gradient = ctx.createRadialGradient(
-                    this.x, this.y, 0,
-                    this.x, this.y, this.size
-                );
-                
-                gradient.addColorStop(0, `rgba(201, 169, 97, ${this.opacity})`);
-                gradient.addColorStop(0.4, `rgba(232, 212, 160, ${this.opacity * 0.7})`);
-                gradient.addColorStop(1, 'rgba(201, 169, 97, 0)');
-                
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        const fogParticles = [];
-        for (let i = 0; i < 40; i++) {
-            fogParticles.push(new FogParticle());
-        }
-
-        function animateFog() {
+        function drawFog() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            fogParticles.forEach(particle => {
-                particle.update();
-                particle.draw();
+            particles.forEach(p => {
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < -p.r) p.x = canvas.width + p.r;
+                if (p.x > canvas.width + p.r) p.x = -p.r;
+                if (p.y < -p.r) p.y = canvas.height + p.r;
+                if (p.y > canvas.height + p.r) p.y = -p.r;
+                
+                const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+                g.addColorStop(0, 'rgba(201,169,97,0.03)');
+                g.addColorStop(1, 'rgba(201,169,97,0)');
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
             });
-            requestAnimationFrame(animateFog);
+            requestAnimationFrame(drawFog);
         }
-        animateFog();
+        drawFog();
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        onresize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+
+        // HWID
+        let HWID = '';
+
+        async function genHWID() {
+            const d = [
+                screen.width, screen.height, screen.colorDepth,
+                navigator.language, navigator.platform,
+                navigator.hardwareConcurrency, devicePixelRatio,
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
+                new Date().getTimezoneOffset()
+            ].join('|');
+            
+            const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(d));
+            const hex = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+            return hex.substring(0, 32).toUpperCase().match(/.{8}/g).join('-');
+        }
+
+        genHWID().then(h => {
+            HWID = h;
+            document.getElementById('hwid').textContent = h;
         });
 
-        // ==================== HARDWARE ID GENERATION ====================
-        
-        async function generateHWID() {
-            const components = [];
-            
-            // Screen properties
-            components.push(window.screen.width);
-            components.push(window.screen.height);
-            components.push(window.screen.colorDepth);
-            components.push(window.screen.pixelDepth);
-            components.push(window.devicePixelRatio);
-            
-            // Timezone
-            components.push(Intl.DateTimeFormat().resolvedOptions().timeZone);
-            components.push(new Date().getTimezoneOffset());
-            
-            // Language and platform
-            components.push(navigator.language);
-            components.push(navigator.languages.join(','));
-            components.push(navigator.platform);
-            components.push(navigator.hardwareConcurrency || 'unknown');
-            components.push(navigator.maxTouchPoints || 0);
-            
-            // Memory (if available)
-            if (navigator.deviceMemory) {
-                components.push(navigator.deviceMemory);
+        // Encryption with expansion
+        async function deriveKey(salt) {
+            const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(HWID), 'PBKDF2', false, ['deriveBits']);
+            const bits = await crypto.subtle.deriveBits({name: 'PBKDF2', salt, iterations: 150000, hash: 'SHA-256'}, key, 256);
+            return crypto.subtle.importKey('raw', bits, 'AES-GCM', false, ['encrypt', 'decrypt']);
+        }
+
+        function expand(data) {
+            const expanded = new Uint8Array(data.length * 3);
+            for (let i = 0; i < data.length; i++) {
+                const b = data[i];
+                expanded[i * 3] = b ^ 0xAA;
+                expanded[i * 3 + 1] = ((b << 4) | (b >> 4)) & 0xFF;
+                expanded[i * 3 + 2] = b ^ 0x55;
             }
-            
-            // Canvas fingerprint
-            try {
-                const canvasFingerprint = await getCanvasFingerprint();
-                components.push(canvasFingerprint);
-            } catch (e) {
-                components.push('canvas-unavailable');
+            return expanded;
+        }
+
+        function compress(expanded) {
+            const data = new Uint8Array(expanded.length / 3);
+            for (let i = 0; i < data.length; i++) {
+                data[i] = expanded[i * 3] ^ 0xAA;
             }
-            
-            // WebGL fingerprint
-            try {
-                const webglFingerprint = getWebGLFingerprint();
-                components.push(webglFingerprint);
-            } catch (e) {
-                components.push('webgl-unavailable');
-            }
-            
-            // Audio context fingerprint
-            try {
-                const audioFingerprint = await getAudioFingerprint();
-                components.push(audioFingerprint);
-            } catch (e) {
-                components.push('audio-unavailable');
-            }
-            
-            // Font detection
-            try {
-                const fontFingerprint = getFontFingerprint();
-                components.push(fontFingerprint);
-            } catch (e) {
-                components.push('fonts-unavailable');
-            }
-            
-            // Combine all components
-            const rawFingerprint = components.join('|');
-            
-            // Generate SHA-256 hash
-            const encoder = new TextEncoder();
-            const data = encoder.encode(rawFingerprint);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            
-            // Format as HWID (take first 32 chars, formatted in groups)
-            const hwid = hashHex.substring(0, 32).toUpperCase();
-            return `${hwid.slice(0, 8)}-${hwid.slice(8, 16)}-${hwid.slice(16, 24)}-${hwid.slice(24, 32)}`;
+            return data;
         }
 
-        function getCanvasFingerprint() {
-            return new Promise((resolve) => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = 200;
-                canvas.height = 50;
-                
-                ctx.textBaseline = 'top';
-                ctx.font = '14px Arial';
-                ctx.fillStyle = '#f60';
-                ctx.fillRect(0, 0, 100, 50);
-                ctx.fillStyle = '#069';
-                ctx.fillText('Ascended Vault', 2, 15);
-                ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-                ctx.fillText('HWID Gen', 4, 32);
-                
-                resolve(canvas.toDataURL());
-            });
-        }
+        async function encrypt() {
+            const text = document.getElementById('input').value;
+            if (!text || !HWID) return;
 
-        function getWebGLFingerprint() {
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-            
-            if (!gl) return 'no-webgl';
-            
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            const vendor = debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'unknown';
-            const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'unknown';
-            
-            return `${vendor}|${renderer}`;
-        }
-
-        function getAudioFingerprint() {
-            return new Promise((resolve) => {
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const analyser = audioContext.createAnalyser();
-                    const gainNode = audioContext.createGain();
-                    const scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
-                    
-                    gainNode.gain.value = 0;
-                    oscillator.type = 'triangle';
-                    oscillator.frequency.value = 10000;
-                    
-                    oscillator.connect(analyser);
-                    analyser.connect(scriptProcessor);
-                    scriptProcessor.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.start(0);
-                    
-                    scriptProcessor.onaudioprocess = function(e) {
-                        const output = e.inputBuffer.getChannelData(0);
-                        let sum = 0;
-                        for (let i = 0; i < output.length; i++) {
-                            sum += Math.abs(output[i]);
-                        }
-                        oscillator.disconnect();
-                        scriptProcessor.disconnect();
-                        gainNode.disconnect();
-                        audioContext.close();
-                        resolve(sum.toString());
-                    };
-                    
-                    setTimeout(() => resolve('audio-timeout'), 1000);
-                } catch (e) {
-                    resolve('audio-error');
-                }
-            });
-        }
-
-        function getFontFingerprint() {
-            const baseFonts = ['monospace', 'sans-serif', 'serif'];
-            const testFonts = [
-                'Arial', 'Verdana', 'Times New Roman', 'Courier New', 
-                'Georgia', 'Comic Sans MS', 'Impact', 'Trebuchet MS'
-            ];
-            
-            const testString = 'mmmmmmmmmmlli';
-            const testSize = '72px';
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            const detected = [];
-            
-            baseFonts.forEach(baseFont => {
-                ctx.font = `${testSize} ${baseFont}`;
-                const baseWidth = ctx.measureText(testString).width;
-                
-                testFonts.forEach(testFont => {
-                    ctx.font = `${testSize} "${testFont}", ${baseFont}`;
-                    const testWidth = ctx.measureText(testString).width;
-                    if (testWidth !== baseWidth) {
-                        detected.push(testFont);
-                    }
-                });
-            });
-            
-            return [...new Set(detected)].join(',');
-        }
-
-        // Initialize HWID on page load
-        async function initializeHWID() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const hwidDisplay = document.getElementById('hwidDisplay');
-            const hwidStatusText = document.getElementById('hwidStatusText');
-            
-            try {
-                // Check localStorage first
-                let storedHWID = localStorage.getItem('ascended_hwid');
-                
-                if (!storedHWID) {
-                    // Generate new HWID
-                    HARDWARE_ID = await generateHWID();
-                    localStorage.setItem('ascended_hwid', HARDWARE_ID);
-                } else {
-                    HARDWARE_ID = storedHWID;
-                }
-                
-                // Display HWID
-                hwidDisplay.textContent = HARDWARE_ID;
-                hwidStatusText.textContent = 'Verified';
-                
-                // Hide loading overlay
-                setTimeout(() => {
-                    loadingOverlay.classList.add('hidden');
-                }, 800);
-                
-            } catch (error) {
-                console.error('HWID generation failed:', error);
-                hwidDisplay.textContent = 'Generation Failed';
-                hwidStatusText.textContent = 'Error';
-                loadingOverlay.classList.add('hidden');
-            }
-        }
-
-        // Run initialization
-        window.addEventListener('load', initializeHWID);
-
-        // ==================== ENCRYPTION SYSTEM ====================
-        
-        // PBKDF2 key derivation
-        async function deriveKey(password, salt) {
-            const encoder = new TextEncoder();
-            const keyMaterial = await crypto.subtle.importKey(
-                'raw',
-                encoder.encode(password),
-                'PBKDF2',
-                false,
-                ['deriveBits']
-            );
-            
-            const derivedBits = await crypto.subtle.deriveBits(
-                {
-                    name: 'PBKDF2',
-                    salt: salt,
-                    iterations: 100000,
-                    hash: 'SHA-256'
-                },
-                keyMaterial,
-                256
-            );
-            
-            return new Uint8Array(derivedBits);
-        }
-
-        // AES-256-GCM encryption
-        async function encryptData(text, password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(text);
-            
             const salt = crypto.getRandomValues(new Uint8Array(16));
             const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await deriveKey(salt);
             
-            const derivedKey = await deriveKey(password, salt);
-            
-            const key = await crypto.subtle.importKey(
-                'raw',
-                derivedKey,
-                'AES-GCM',
-                false,
-                ['encrypt']
-            );
-            
-            const encrypted = await crypto.subtle.encrypt(
-                {
-                    name: 'AES-GCM',
-                    iv: iv
-                },
-                key,
-                data
-            );
+            const encoded = new TextEncoder().encode(text);
+            const expanded = expand(encoded);
+            const encrypted = await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, expanded);
             
             const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
             result.set(salt, 0);
-            result.set(iv, salt.length);
-            result.set(new Uint8Array(encrypted), salt.length + iv.length);
+            result.set(iv, 16);
+            result.set(new Uint8Array(encrypted), 28);
             
-            return btoa(String.fromCharCode(...result));
+            document.getElementById('output').value = btoa(String.fromCharCode(...result));
         }
 
-        // AES-256-GCM decryption
-        async function decryptData(encryptedBase64, password) {
-            const encryptedData = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
-            
-            const salt = encryptedData.slice(0, 16);
-            const iv = encryptedData.slice(16, 28);
-            const ciphertext = encryptedData.slice(28);
-            
-            const derivedKey = await deriveKey(password, salt);
-            
-            const key = await crypto.subtle.importKey(
-                'raw',
-                derivedKey,
-                'AES-GCM',
-                false,
-                ['decrypt']
-            );
-            
-            const decrypted = await crypto.subtle.decrypt(
-                {
-                    name: 'AES-GCM',
-                    iv: iv
-                },
-                key,
-                ciphertext
-            );
-            
-            const decoder = new TextDecoder();
-            return decoder.decode(decrypted);
+        async function decrypt() {
+            const text = document.getElementById('input').value;
+            if (!text || !HWID) return;
+
+            try {
+                const data = Uint8Array.from(atob(text), c => c.charCodeAt(0));
+                const salt = data.slice(0, 16);
+                const iv = data.slice(16, 28);
+                const encrypted = data.slice(28);
+                
+                const key = await deriveKey(salt);
+                const decrypted = await crypto.subtle.decrypt({name: 'AES-GCM', iv}, key, encrypted);
+                const compressed = compress(new Uint8Array(decrypted));
+                
+                document.getElementById('output').value = new TextDecoder().decode(compressed);
+            } catch {
+                document.getElementById('output').value = 'Decryption failed';
+            }
         }
 
-        // UI Functions
-        async function encryptText() {
-            const input = document.getElementById('inputText').value;
-            
-            if (!input.trim()) {
-                showStatus('Please enter text to encrypt', 'error');
-                return;
-            }
-            
-            if (!HARDWARE_ID) {
-                showStatus('Hardware ID not initialized', 'error');
-                return;
-            }
-            
-            try {
-                const encrypted = await encryptData(input, HARDWARE_ID);
-                document.getElementById('outputText').value = encrypted;
-                showStatus('Text encrypted with AES-256', 'success');
-            } catch (error) {
-                showStatus('Encryption failed: ' + error.message, 'error');
-            }
+        function copy() {
+            const output = document.getElementById('output').value;
+            if (output) navigator.clipboard.writeText(output);
         }
-        
-        async function decryptText() {
-            const input = document.getElementById('inputText').value;
-            
-            if (!input.trim()) {
-                showStatus('Please enter encrypted text to decrypt', 'error');
-                return;
-            }
-            
-            if (!HARDWARE_ID) {
-                showStatus('Hardware ID not initialized', 'error');
-                return;
-            }
-            
-            try {
-                const decrypted = await decryptData(input, HARDWARE_ID);
-                document.getElementById('outputText').value = decrypted;
-                showStatus('Text decrypted successfully', 'success');
-            } catch (error) {
-                showStatus('Decryption failed: Invalid data or wrong device', 'error');
-            }
-        }
-        
-        function copyOutput() {
-            const output = document.getElementById('outputText');
-            if (!output.value.trim()) {
-                showStatus('No output to copy', 'error');
-                return;
-            }
-            
-            navigator.clipboard.writeText(output.value).then(() => {
-                showStatus('Copied to clipboard', 'success');
-            }).catch(() => {
-                showStatus('Failed to copy', 'error');
-            });
-        }
-        
-        function clearAll() {
-            document.getElementById('inputText').value = '';
-            document.getElementById('outputText').value = '';
-            showStatus('Fields cleared', 'success');
-        }
-        
-        function showStatus(message, type) {
-            const status = document.getElementById('status');
-            const statusText = document.getElementById('statusText');
-            const statusIcon = document.getElementById('statusIcon');
-            
-            statusText.textContent = message;
-            status.className = `status ${type} show`;
-            
-            if (type === 'success') {
-                statusIcon.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
-            } else {
-                statusIcon.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
-            }
-            
-            setTimeout(() => {
-                status.classList.remove('show');
-            }, 3000);
+
+        function clear() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
         }
     </script>
 </body>
