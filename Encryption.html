@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascended Encryption</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/PzsHQ1bV/Screenshot-2026-02-04-013331-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ancient-yellow: #c9a961;
+            --ancient-yellow-light: #e8d4a0;
+            --ancient-yellow-dark: #a68845;
+            --bg: #000000;
+            --bg-panel: rgba(10, 10, 10, 0.8);
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--ancient-yellow);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--ancient-yellow);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(201, 169, 97, 0.6);
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .star-small { width: 2px; height: 2px; }
+        .star-medium { width: 3px; height: 3px; }
+        .star-large { width: 4px; height: 4px; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Fog canvas */
+        #smoke-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(201, 169, 97, 0.2);
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(201, 169, 97, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ancient-yellow);
+            text-shadow: 0 0 20px rgba(201, 169, 97, 0.6);
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(201, 169, 97, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--ancient-yellow-light);
+            text-shadow: 0 0 10px rgba(232, 212, 160, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 2;
+            padding: 8rem 2rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--ancient-yellow) 0%, var(--ancient-yellow-light) 50%, var(--ancient-yellow-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(201, 169, 97, 0.3);
+            filter: drop-shadow(0 0 40px rgba(201, 169, 97, 0.3));
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: rgba(201, 169, 97, 0.7);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .security-badge {
+            display: inline-block;
+            background: rgba(201, 169, 97, 0.1);
+            border: 1px solid rgba(201, 169, 97, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--ancient-yellow-light);
+            margin-bottom: 3rem;
+            box-shadow: 0 0 20px rgba(201, 169, 97, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .encryption-container {
+            background: var(--bg-panel);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 0 40px rgba(201, 169, 97, 0.15),
+                inset 0 0 30px rgba(201, 169, 97, 0.02);
+        }
+
+        .key-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(201, 169, 97, 0.05);
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 12px;
+        }
+
+        .key-section h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--ancient-yellow-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .key-input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .key-input {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(201, 169, 97, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--ancient-yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: var(--ancient-yellow);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px rgba(201, 169, 97, 0.2);
+        }
+
+        .key-input::placeholder {
+            color: rgba(201, 169, 97, 0.4);
+        }
+
+        .btn-generate {
+            background: rgba(201, 169, 97, 0.15);
+            border: 1px solid var(--ancient-yellow);
+            color: var(--ancient-yellow);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-generate:hover {
+            background: rgba(201, 169, 97, 0.25);
+            box-shadow: 0 0 20px rgba(201, 169, 97, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .encryption-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .panel {
+            background: rgba(201, 169, 97, 0.03);
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--ancient-yellow-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .textarea {
+            width: 100%;
+            min-height: 250px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--ancient-yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+            line-height: 1.5;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: var(--ancient-yellow);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px rgba(201, 169, 97, 0.2);
+        }
+
+        .textarea::placeholder {
+            color: rgba(201, 169, 97, 0.4);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: rgba(201, 169, 97, 0.15);
+            border: 1px solid var(--ancient-yellow);
+            color: var(--ancient-yellow);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: rgba(201, 169, 97, 0.25);
+            box-shadow: 0 0 30px rgba(201, 169, 97, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Status notification */
+        .status {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            color: var(--ancient-yellow);
+            padding: 1.5rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(201, 169, 97, 0.3);
+            box-shadow: 0 0 40px rgba(201, 169, 97, 0.2);
+        }
+
+        .status.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .status.success {
+            border-left: 4px solid var(--ancient-yellow);
+        }
+
+        .status.error {
+            border-left: 4px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        /* Footer info */
+        .footer-info {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 3rem 2rem;
+            color: rgba(201, 169, 97, 0.5);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding: 6rem 1rem 2rem;
+            }
+            
+            .encryption-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .key-input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB724Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="stars" id="stars"></div>
+    <canvas id="smoke-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">ASCENDED VAULT</div>
+            <ul class="nav-links">
+                <li><a href="#encrypt">Encrypt</a></li>
+                <li><a href="#decrypt">Decrypt</a></li>
+                <li><a href="#security">Security</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Military-Grade Encryption</h1>
+        <p>Advanced AES-256 encryption with custom key derivation. Your data protected with cryptographic excellence.</p>
+        <div class="security-badge">🔒 256-BIT ENCRYPTION • SECURE KEY DERIVATION • ZERO KNOWLEDGE</div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="encryption-container">
+            <div class="key-section">
+                <h3>🔑 Encryption Key</h3>
+                <div class="key-input-group">
+                    <input 
+                        type="text" 
+                        id="keyInput" 
+                        class="key-input" 
+                        placeholder="Enter your secret encryption key (min 8 characters)"
+                        autocomplete="off"
+                    >
+                    <button class="btn-generate" onclick="generateKey()">Generate Strong Key</button>
+                </div>
+            </div>
+
+            <div class="encryption-grid">
+                <div class="panel">
+                    <div class="panel-title">📝 Input Text</div>
+                    <textarea 
+                        id="inputText" 
+                        class="textarea" 
+                        placeholder="Enter your text to encrypt or decrypt..."
+                    ></textarea>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-title">🔐 Output Result</div>
+                    <textarea 
+                        id="outputText" 
+                        class="textarea" 
+                        readonly 
+                        placeholder="Your encrypted/decrypted result will appear here..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" onclick="encryptText()">🔒 Encrypt</button>
+                <button class="btn" onclick="decryptText()">🔓 Decrypt</button>
+                <button class="btn" onclick="copyOutput()">📋 Copy</button>
+                <button class="btn" onclick="clearAll()">🗑️ Clear</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="footer-info">
+        Enhanced security with AES-256 encryption | Client-side processing | Zero data retention
+    </div>
+
+    <!-- Status Notification -->
+    <div id="status" class="status">
+        <span id="statusText"></span>
+    </div>
+
+    <script>
+        // Auto-play background music
+        const bgMusic = document.getElementById('bgMusic');
+        bgMusic.volume = 0.15;
+        
+        const playMusic = () => {
+            bgMusic.play().catch(() => {
+                document.addEventListener('click', () => bgMusic.play(), { once: true });
+            });
+        };
+        window.addEventListener('load', playMusic);
+
+        // Create stars
+        const starsContainer = document.getElementById('stars');
+        const starSizes = ['star-small', 'star-medium', 'star-large'];
+        
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star ' + starSizes[Math.floor(Math.random() * starSizes.length)];
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Fog effect
+        const canvas = document.getElementById('smoke-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class FogParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 100;
+                this.maxSize = Math.random() * 250 + 150;
+                this.size = 0;
+                this.speedY = Math.random() * 0.25 + 0.1;
+                this.speedX = (Math.random() - 0.5) * 0.15;
+                this.maxOpacity = Math.random() * 0.06 + 0.03;
+                this.life = 0;
+                this.maxLife = Math.random() * 600 + 400;
+                this.peakLife = this.maxLife * 0.5;
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.life++;
+                
+                if (this.life < this.peakLife) {
+                    const growRatio = this.life / this.peakLife;
+                    this.size = this.maxSize * growRatio;
+                    this.opacity = this.maxOpacity * growRatio;
+                } else {
+                    const shrinkRatio = (this.maxLife - this.life) / (this.maxLife - this.peakLife);
+                    this.size = this.maxSize * shrinkRatio;
+                    this.opacity = this.maxOpacity * shrinkRatio;
+                }
+                
+                if (this.life > this.maxLife || this.y < -this.maxSize) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                
+                gradient.addColorStop(0, `rgba(201, 169, 97, ${this.opacity})`);
+                gradient.addColorStop(0.4, `rgba(232, 212, 160, ${this.opacity * 0.7})`);
+                gradient.addColorStop(1, 'rgba(201, 169, 97, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const fogParticles = [];
+        for (let i = 0; i < 40; i++) {
+            fogParticles.push(new FogParticle());
+        }
+
+        function animateFog() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fogParticles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateFog);
+        }
+        animateFog();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // ==================== ENHANCED ENCRYPTION SYSTEM ====================
+        
+        // Secure random key generation
+        function generateKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+            let key = '';
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            
+            for (let i = 0; i < 32; i++) {
+                key += chars[array[i] % chars.length];
+            }
+            
+            document.getElementById('keyInput').value = key;
+            showStatus('Strong key generated successfully', 'success');
+        }
+
+        // PBKDF2 key derivation for enhanced security
+        async function deriveKey(password, salt) {
+            const encoder = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                encoder.encode(password),
+                'PBKDF2',
+                false,
+                ['deriveBits']
+            );
+            
+            const derivedBits = await crypto.subtle.deriveBits(
+                {
+                    name: 'PBKDF2',
+                    salt: salt,
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                256
+            );
+            
+            return new Uint8Array(derivedBits);
+        }
+
+        // AES-256-GCM encryption
+        async function encryptData(text, password) {
+            if (password.length < 8) {
+                throw new Error('Key must be at least 8 characters long');
+            }
+
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            
+            // Generate random salt and IV
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            
+            // Derive key from password
+            const derivedKey = await deriveKey(password, salt);
+            
+            // Import key for AES-GCM
+            const key = await crypto.subtle.importKey(
+                'raw',
+                derivedKey,
+                'AES-GCM',
+                false,
+                ['encrypt']
+            );
+            
+            // Encrypt
+            const encrypted = await crypto.subtle.encrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv
+                },
+                key,
+                data
+            );
+            
+            // Combine salt + iv + encrypted data
+            const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+            result.set(salt, 0);
+            result.set(iv, salt.length);
+            result.set(new Uint8Array(encrypted), salt.length + iv.length);
+            
+            // Convert to base64
+            return btoa(String.fromCharCode(...result));
+        }
+
+        // AES-256-GCM decryption
+        async function decryptData(encryptedBase64, password) {
+            if (password.length < 8) {
+                throw new Error('Key must be at least 8 characters long');
+            }
+
+            // Decode base64
+            const encryptedData = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+            
+            // Extract salt, iv, and ciphertext
+            const salt = encryptedData.slice(0, 16);
+            const iv = encryptedData.slice(16, 28);
+            const ciphertext = encryptedData.slice(28);
+            
+            // Derive key from password
+            const derivedKey = await deriveKey(password, salt);
+            
+            // Import key for AES-GCM
+            const key = await crypto.subtle.importKey(
+                'raw',
+                derivedKey,
+                'AES-GCM',
+                false,
+                ['decrypt']
+            );
+            
+            // Decrypt
+            const decrypted = await crypto.subtle.decrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv
+                },
+                key,
+                ciphertext
+            );
+            
+            const decoder = new TextDecoder();
+            return decoder.decode(decrypted);
+        }
+
+        // UI Functions
+        async function encryptText() {
+            const input = document.getElementById('inputText').value;
+            const key = document.getElementById('keyInput').value;
+            
+            if (!input.trim()) {
+                showStatus('Please enter text to encrypt', 'error');
+                return;
+            }
+            
+            if (!key) {
+                showStatus('Please enter an encryption key', 'error');
+                return;
+            }
+            
+            if (key.length < 8) {
+                showStatus('Key must be at least 8 characters long', 'error');
+                return;
+            }
+            
+            try {
+                const encrypted = await encryptData(input, key);
+                document.getElementById('outputText').value = encrypted;
+                showStatus('✓ Text encrypted with AES-256', 'success');
+            } catch (error) {
+                showStatus('Encryption failed: ' + error.message, 'error');
+            }
+        }
+        
+        async function decryptText() {
+            const input = document.getElementById('inputText').value;
+            const key = document.getElementById('keyInput').value;
+            
+            if (!input.trim()) {
+                showStatus('Please enter encrypted text to decrypt', 'error');
+                return;
+            }
+            
+            if (!key) {
+                showStatus('Please enter the decryption key', 'error');
+                return;
+            }
+            
+            try {
+                const decrypted = await decryptData(input, key);
+                document.getElementById('outputText').value = decrypted;
+                showStatus('✓ Text decrypted successfully', 'success');
+            } catch (error) {
+                showStatus('Decryption failed: Invalid key or corrupted data', 'error');
+            }
+        }
+        
+        function copyOutput() {
+            const output = document.getElementById('outputText');
+            if (!output.value.trim()) {
+                showStatus('No output to copy', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(output.value).then(() => {
+                showStatus('✓ Copied to clipboard', 'success');
+            }).catch(() => {
+                showStatus('Failed to copy', 'error');
+            });
+        }
+        
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+            showStatus('✓ Fields cleared', 'success');
+        }
+        
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+            
+            statusText.textContent = message;
+            status.className = `status ${type} show`;
+            
+            setTimeout(() => {
+                status.classList.remove('show');
+            }, 3000);
+        }
+
+        // Security: Prevent key from being logged
+        document.getElementById('keyInput').addEventListener('copy', (e) => {
+            showStatus('⚠️ Key copied - keep it secure!', 'success');
+        });
+    </script>
+</body>
+</html>
