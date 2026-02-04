@@ -164,30 +164,28 @@
             text-shadow: 0 0 20px rgba(232, 212, 160, 0.8);
         }
 
-        /* Volume Control */
+        /* Volume Control - TOP LEFT */
         .volume-control {
-            position: relative;
-            z-index: 2;
-            margin-top: 30px;
-            text-align: center;
-            padding: 20px;
-            background: rgba(10, 10, 10, 0.7);
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            padding: 15px 20px;
+            background: rgba(10, 10, 10, 0.8);
             border: 1px solid rgba(201, 169, 97, 0.3);
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
             backdrop-filter: blur(10px);
             box-shadow: 
                 0 0 30px rgba(201, 169, 97, 0.08),
                 inset 0 0 20px rgba(201, 169, 97, 0.02);
+            min-width: 200px;
         }
 
         .volume-label {
-            font-size: 11px;
+            font-size: 10px;
             color: rgba(201, 169, 97, 0.7);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .volume-slider {
@@ -240,6 +238,7 @@
             color: var(--ancient-yellow);
             margin-top: 8px;
             text-shadow: 0 0 8px rgba(201, 169, 97, 0.4);
+            text-align: center;
         }
 
         /* Enhanced particles */
@@ -339,6 +338,13 @@
             .info-text {
                 font-size: 11px;
             }
+
+            .volume-control {
+                top: 10px;
+                left: 10px;
+                padding: 12px 15px;
+                min-width: 160px;
+            }
         }
     </style>
 </head>
@@ -347,6 +353,13 @@
     <audio id="bgMusic" loop>
         <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB424Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Volume Control - TOP LEFT -->
+    <div class="volume-control">
+        <div class="volume-label">Music Volume</div>
+        <input type="range" min="0" max="100" value="30" class="volume-slider" id="volumeSlider">
+        <div class="volume-value" id="volumeValue">30%</div>
+    </div>
 
     <div class="stars" id="stars"></div>
     <canvas id="smoke-canvas"></canvas>
@@ -359,14 +372,8 @@
         <div class="info-section">
             <div class="info-title">Ascended is a Website for hosting Roblox scripts!</div>
             <div class="info-text">
-                If you want to host ur script on ascended.lat DM <a href="https://discord.com/channels/@me/1466971739983450296" target="_blank" class="dm-link">za.1k</a> the price is 1$ to host with updates
+                If you want to host ur script on ascended.lat DM <a href="https://discord.gg/JJUPDzNHbC" target="_blank" class="dm-link">za.1k</a> the price is 1$ to host with updates
             </div>
-        </div>
-
-        <div class="volume-control">
-            <div class="volume-label">Music Volume</div>
-            <input type="range" min="0" max="100" value="30" class="volume-slider" id="volumeSlider">
-            <div class="volume-value" id="volumeValue">30%</div>
         </div>
     </div>
 
