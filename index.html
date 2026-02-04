@@ -402,26 +402,46 @@
         let audioSource = null;
         
         // Try to autoplay, if blocked, play on first user interaction
-        const playMusic = () => {
-            bgMusic.play().then(() => {
+        const playMusic = async () => {
+            try {
+                // Resume audio context if it's suspended
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                await bgMusic.play();
+                
                 // Connect audio to analyser if not already connected
                 if (!audioSource) {
                     audioSource = audioContext.createMediaElementSource(bgMusic);
                     audioSource.connect(analyser);
                     analyser.connect(audioContext.destination);
                 }
-            }).catch(() => {
-                // If autoplay is blocked, play on first click/touch
-                document.addEventListener('click', () => {
-                    bgMusic.play().then(() => {
+            } catch (error) {
+                console.log('Autoplay blocked, waiting for user interaction...');
+                // If autoplay is blocked, play on first click/touch/keypress
+                const startAudio = async () => {
+                    try {
+                        if (audioContext.state === 'suspended') {
+                            await audioContext.resume();
+                        }
+                        
+                        await bgMusic.play();
+                        
                         if (!audioSource) {
                             audioSource = audioContext.createMediaElementSource(bgMusic);
                             audioSource.connect(analyser);
                             analyser.connect(audioContext.destination);
                         }
-                    });
-                }, { once: true });
-            });
+                    } catch (err) {
+                        console.error('Audio play error:', err);
+                    }
+                };
+                
+                document.addEventListener('click', startAudio, { once: true });
+                document.addEventListener('touchstart', startAudio, { once: true });
+                document.addEventListener('keydown', startAudio, { once: true });
+            }
         };
         
         // Get audio intensity (bass/low frequencies)
