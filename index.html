@@ -290,23 +290,7 @@
         // Auto-play background music
         const bgMusic = document.getElementById('bgMusic');
         bgMusic.volume = 0.3; // Set default volume to 30%
-        
-        // Handle autoplay restrictions - play on first user interaction if blocked
-        const playMusic = () => {
-            bgMusic.play().catch(() => {
-                // If autoplay is blocked, play on first click/touch
-                const startMusic = () => {
-                    bgMusic.play();
-                    document.removeEventListener('click', startMusic);
-                    document.removeEventListener('touchstart', startMusic);
-                };
-                document.addEventListener('click', startMusic);
-                document.addEventListener('touchstart', startMusic);
-            });
-        };
-        
-        // Attempt to play when page loads
-        window.addEventListener('load', playMusic);
+        bgMusic.play();
 
         // Create yellow twinkling stars
         const starsContainer = document.getElementById('stars');
