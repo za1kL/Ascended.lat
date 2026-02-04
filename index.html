@@ -164,84 +164,6 @@
             text-shadow: 0 0 20px rgba(232, 212, 160, 0.8);
         }
 
-        /* Volume Control */
-        .volume-control {
-            position: relative;
-            z-index: 2;
-            margin-top: 30px;
-            text-align: center;
-            padding: 20px;
-            background: rgba(10, 10, 10, 0.7);
-            border: 1px solid rgba(201, 169, 97, 0.3);
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-            backdrop-filter: blur(10px);
-            box-shadow: 
-                0 0 30px rgba(201, 169, 97, 0.08),
-                inset 0 0 20px rgba(201, 169, 97, 0.02);
-        }
-
-        .volume-label {
-            font-size: 11px;
-            color: rgba(201, 169, 97, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-
-        .volume-slider {
-            width: 100%;
-            height: 4px;
-            border-radius: 2px;
-            background: rgba(201, 169, 97, 0.2);
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--ancient-yellow);
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(201, 169, 97, 0.6);
-            transition: all 0.3s ease;
-        }
-
-        .volume-slider::-webkit-slider-thumb:hover {
-            background: var(--ancient-yellow-light);
-            box-shadow: 0 0 15px rgba(232, 212, 160, 0.8);
-            transform: scale(1.2);
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--ancient-yellow);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 10px rgba(201, 169, 97, 0.6);
-            transition: all 0.3s ease;
-        }
-
-        .volume-slider::-moz-range-thumb:hover {
-            background: var(--ancient-yellow-light);
-            box-shadow: 0 0 15px rgba(232, 212, 160, 0.8);
-            transform: scale(1.2);
-        }
-
-        .volume-value {
-            font-size: 10px;
-            color: var(--ancient-yellow);
-            margin-top: 8px;
-            text-shadow: 0 0 8px rgba(201, 169, 97, 0.4);
-        }
-
         /* Enhanced particles */
         .particle {
             position: fixed;
@@ -344,7 +266,7 @@
 </head>
 <body>
     <!-- Background Music -->
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop autoplay>
         <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB424Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
     </audio>
 
@@ -362,36 +284,24 @@
                 If you want to host ur script on ascended.lat DM <a href="https://discord.com/channels/@me/1466971739983450296" target="_blank" class="dm-link">za.1k</a> the price is 1$ to host with updates
             </div>
         </div>
-
-        <div class="volume-control">
-            <div class="volume-label">Music Volume</div>
-            <input type="range" min="0" max="100" value="30" class="volume-slider" id="volumeSlider">
-            <div class="volume-value" id="volumeValue">30%</div>
-        </div>
     </div>
 
     <script>
-        // Auto-play background music with user interaction
+        // Auto-play background music
         const bgMusic = document.getElementById('bgMusic');
-        bgMusic.volume = 0.3; // Set volume to 30%
+        bgMusic.volume = 0.3; // Set default volume to 30%
         
-        // Volume slider control
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeValue = document.getElementById('volumeValue');
-        
-        volumeSlider.addEventListener('input', (e) => {
-            const volume = e.target.value / 100;
-            bgMusic.volume = volume;
-            volumeValue.textContent = e.target.value + '%';
-        });
-        
-        // Try to autoplay, if blocked, play on first user interaction
+        // Handle autoplay restrictions - play on first user interaction if blocked
         const playMusic = () => {
             bgMusic.play().catch(() => {
                 // If autoplay is blocked, play on first click/touch
-                document.addEventListener('click', () => {
+                const startMusic = () => {
                     bgMusic.play();
-                }, { once: true });
+                    document.removeEventListener('click', startMusic);
+                    document.removeEventListener('touchstart', startMusic);
+                };
+                document.addEventListener('click', startMusic);
+                document.addEventListener('touchstart', startMusic);
             });
         };
         
