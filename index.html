@@ -118,31 +118,81 @@
             text-shadow: 0 0 20px rgba(232, 212, 160, 0.8);
         }
 
-        /* Subtle particles */
+        /* Enhanced particles */
         .particle {
             position: fixed;
-            width: 1px;
-            height: 1px;
             background: var(--ancient-yellow);
             border-radius: 50%;
             pointer-events: none;
             opacity: 0;
-            animation: float 10s ease-in-out infinite;
+            box-shadow: 0 0 4px rgba(201, 169, 97, 0.6);
         }
 
-        @keyframes float {
+        .particle-small {
+            width: 2px;
+            height: 2px;
+            animation: floatSmall 12s ease-in-out infinite;
+        }
+
+        .particle-medium {
+            width: 3px;
+            height: 3px;
+            animation: floatMedium 15s ease-in-out infinite;
+        }
+
+        .particle-large {
+            width: 4px;
+            height: 4px;
+            animation: floatLarge 18s ease-in-out infinite;
+        }
+
+        @keyframes floatSmall {
             0% {
-                transform: translateY(100vh) translateX(0);
+                transform: translateY(100vh) translateX(0) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.3;
+                opacity: 0.4;
             }
             90% {
-                opacity: 0.3;
+                opacity: 0.4;
             }
             100% {
-                transform: translateY(-100vh) translateX(30px);
+                transform: translateY(-100vh) translateX(40px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatMedium {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(-40px) rotate(-360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatLarge {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(60px) rotate(360deg);
                 opacity: 0;
             }
         }
@@ -169,6 +219,11 @@
     </style>
 </head>
 <body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB424Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
+    </audio>
+
     <canvas id="smoke-canvas"></canvas>
 
     <div class="container">
@@ -185,7 +240,24 @@
     </div>
 
     <script>
-        // Ancient yellow fog effect
+        // Auto-play background music with user interaction
+        const bgMusic = document.getElementById('bgMusic');
+        bgMusic.volume = 0.3; // Set volume to 30%
+        
+        // Try to autoplay, if blocked, play on first user interaction
+        const playMusic = () => {
+            bgMusic.play().catch(() => {
+                // If autoplay is blocked, play on first click/touch
+                document.addEventListener('click', () => {
+                    bgMusic.play();
+                }, { once: true });
+            });
+        };
+        
+        // Attempt to play when page loads
+        window.addEventListener('load', playMusic);
+
+        // Enhanced ancient yellow fog effect
         const canvas = document.getElementById('smoke-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -199,12 +271,12 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = canvas.height + 100;
-                this.size = Math.random() * 250 + 150;
-                this.speedY = Math.random() * 0.25 + 0.08;
-                this.speedX = (Math.random() - 0.5) * 0.15;
-                this.opacity = Math.random() * 0.06 + 0.03;
+                this.size = Math.random() * 300 + 200;
+                this.speedY = Math.random() * 0.3 + 0.1;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.opacity = Math.random() * 0.08 + 0.04;
                 this.life = 0;
-                this.maxLife = Math.random() * 500 + 400;
+                this.maxLife = Math.random() * 600 + 400;
             }
 
             update() {
@@ -226,9 +298,10 @@
                     this.x, this.y, this.size
                 );
                 
-                // Ancient yellow gradient
+                // Ancient yellow gradient with more variation
                 gradient.addColorStop(0, `rgba(201, 169, 97, ${currentOpacity})`);
-                gradient.addColorStop(0.4, `rgba(166, 136, 69, ${currentOpacity * 0.6})`);
+                gradient.addColorStop(0.3, `rgba(232, 212, 160, ${currentOpacity * 0.8})`);
+                gradient.addColorStop(0.6, `rgba(166, 136, 69, ${currentOpacity * 0.5})`);
                 gradient.addColorStop(1, 'rgba(201, 169, 97, 0)');
                 
                 ctx.fillStyle = gradient;
@@ -238,8 +311,9 @@
             }
         }
 
+        // Increased fog particles from 35 to 60
         const fogParticles = [];
-        for (let i = 0; i < 35; i++) {
+        for (let i = 0; i < 60; i++) {
             fogParticles.push(new FogParticle());
         }
 
@@ -255,13 +329,24 @@
         }
         animateFog();
 
-        // Floating particles
-        for (let i = 0; i < 15; i++) {
+        // Enhanced floating particles - increased from 15 to 50
+        const particleTypes = ['particle-small', 'particle-medium', 'particle-large'];
+        
+        for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
-            particle.className = 'particle';
+            particle.className = 'particle ' + particleTypes[Math.floor(Math.random() * particleTypes.length)];
             particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 10 + 's';
-            particle.style.animationDuration = (Math.random() * 6 + 8) + 's';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            
+            // Vary animation duration based on particle type
+            if (particle.classList.contains('particle-small')) {
+                particle.style.animationDuration = (Math.random() * 4 + 10) + 's';
+            } else if (particle.classList.contains('particle-medium')) {
+                particle.style.animationDuration = (Math.random() * 5 + 13) + 's';
+            } else {
+                particle.style.animationDuration = (Math.random() * 6 + 16) + 's';
+            }
+            
             document.body.appendChild(particle);
         }
 
