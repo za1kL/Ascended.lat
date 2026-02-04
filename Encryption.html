@@ -16,7 +16,6 @@
         :root {
             --gold: #c9a961;
             --gold-light: #e8d4a0;
-            --gold-dark: #a68845;
             --bg: #000;
         }
 
@@ -98,42 +97,26 @@
             color: var(--gold-light);
         }
 
-        .hwid-section {
+        .hwid-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: rgba(201, 169, 97, 0.08);
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 6px;
+            font-size: 0.75rem;
             margin-bottom: 2rem;
         }
 
-        .hwid-label {
-            font-size: 0.75rem;
+        .hwid-bar span {
             color: rgba(201, 169, 97, 0.6);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .hwid-input-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .hwid-input {
-            flex: 1;
-            padding: 0.7rem 1rem;
-            background: rgba(201, 169, 97, 0.05);
-            border: 1px solid rgba(201, 169, 97, 0.2);
-            border-radius: 6px;
-            color: var(--gold);
-            font-family: inherit;
-            font-size: 0.85rem;
-            transition: border-color 0.2s;
-        }
-
-        .hwid-input:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
-
-        .hwid-input::placeholder {
-            color: rgba(201, 169, 97, 0.3);
+        .hwid-bar code {
+            color: var(--gold-light);
+            font-weight: 600;
         }
 
         .panels {
@@ -203,10 +186,6 @@
                 grid-template-columns: 1fr;
             }
             
-            .hwid-input-group {
-                flex-direction: column;
-            }
-            
             .buttons {
                 flex-wrap: wrap;
             }
@@ -231,11 +210,9 @@
             <h1>Encryption</h1>
         </div>
 
-        <div class="hwid-section">
-            <div class="hwid-label">Hardware ID</div>
-            <div class="hwid-input-group">
-                <input type="text" id="hwid" class="hwid-input" placeholder="Enter your HWID...">
-            </div>
+        <div class="hwid-bar">
+            <span>HWID:</span>
+            <code id="hwid-display">loading...</code>
         </div>
 
         <div class="panels">
@@ -308,14 +285,22 @@
 
         onresize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
 
-        // Get HWID from input
-        function getHWID() {
-            return document.getElementById('hwid').value.trim();
+        // HWID
+        function getMachineId() {
+            let machineId = localStorage.getItem('MachineId');
+            if (!machineId) {
+                machineId = crypto.randomUUID();
+                localStorage.setItem('MachineId', machineId);
+            }
+            return machineId;
         }
 
+        const HWID = getMachineId();
+        document.getElementById('hwid-display').textContent = HWID;
+
         // Encryption
-        async function deriveKey(hwid, salt) {
-            const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(hwid), 'PBKDF2', false, ['deriveBits']);
+        async function deriveKey(salt) {
+            const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(HWID), 'PBKDF2', false, ['deriveBits']);
             const bits = await crypto.subtle.deriveBits({name: 'PBKDF2', salt, iterations: 150000, hash: 'SHA-256'}, key, 256);
             return crypto.subtle.importKey('raw', bits, 'AES-GCM', false, ['encrypt', 'decrypt']);
         }
@@ -341,12 +326,11 @@
 
         async function encrypt() {
             const text = document.getElementById('input').value;
-            const hwid = getHWID();
-            if (!text || !hwid) return;
+            if (!text) return;
 
             const salt = crypto.getRandomValues(new Uint8Array(16));
             const iv = crypto.getRandomValues(new Uint8Array(12));
-            const key = await deriveKey(hwid, salt);
+            const key = await deriveKey(salt);
             
             const encoded = new TextEncoder().encode(text);
             const expanded = expand(encoded);
@@ -362,8 +346,7 @@
 
         async function decrypt() {
             const text = document.getElementById('input').value;
-            const hwid = getHWID();
-            if (!text || !hwid) return;
+            if (!text) return;
 
             try {
                 const data = Uint8Array.from(atob(text), c => c.charCodeAt(0));
@@ -371,7 +354,7 @@
                 const iv = data.slice(16, 28);
                 const encrypted = data.slice(28);
                 
-                const key = await deriveKey(hwid, salt);
+                const key = await deriveKey(salt);
                 const decrypted = await crypto.subtle.decrypt({name: 'AES-GCM', iv}, key, encrypted);
                 const compressed = compress(new Uint8Array(decrypted));
                 
