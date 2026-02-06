@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascended</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/PzsHQ1bV/Screenshot-2026-02-04-013331-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ancient-yellow: #c9a961;
+            --ancient-yellow-light: #e8d4a0;
+            --ancient-yellow-dark: #a68845;
+            --bg: #000000;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Yellow stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--ancient-yellow);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(201, 169, 97, 0.8),
+                        0 0 15px rgba(232, 212, 160, 0.4);
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .star-small {
+            width: 2px;
+            height: 2px;
+        }
+
+        .star-medium {
+            width: 3px;
+            height: 3px;
+        }
+
+        .star-large {
+            width: 4px;
+            height: 4px;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Ancient yellow fog effect */
+        #smoke-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Logo */
+        .logo-container {
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .logo {
+            width: 200px;
+            height: 200px;
+            filter: drop-shadow(0 0 30px rgba(201, 169, 97, 0.6))
+                    drop-shadow(0 0 60px rgba(201, 169, 97, 0.3));
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 30px rgba(201, 169, 97, 0.6))
+                        drop-shadow(0 0 60px rgba(201, 169, 97, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(201, 169, 97, 0.8))
+                        drop-shadow(0 0 80px rgba(201, 169, 97, 0.5));
+            }
+        }
+
+        /* Info section */
+        .info-section {
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid rgba(201, 169, 97, 0.3);
+            padding: 25px 35px;
+            max-width: 500px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 40px rgba(201, 169, 97, 0.1),
+                inset 0 0 30px rgba(201, 169, 97, 0.02);
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ancient-yellow);
+            text-shadow: 0 0 15px rgba(201, 169, 97, 0.5);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: rgba(201, 169, 97, 0.7);
+            line-height: 1.6;
+        }
+
+        .dm-link {
+            color: var(--ancient-yellow-light);
+            text-decoration: none;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(232, 212, 160, 0.5);
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .dm-link:hover {
+            border-bottom: 1px solid var(--ancient-yellow-light);
+            text-shadow: 0 0 20px rgba(232, 212, 160, 0.8);
+        }
+
+        /* Enhanced particles */
+        .particle {
+            position: fixed;
+            background: var(--ancient-yellow);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            box-shadow: 0 0 4px rgba(201, 169, 97, 0.6);
+        }
+
+        .particle-small {
+            width: 2px;
+            height: 2px;
+            animation: floatSmall 12s ease-in-out infinite;
+        }
+
+        .particle-medium {
+            width: 3px;
+            height: 3px;
+            animation: floatMedium 15s ease-in-out infinite;
+        }
+
+        .particle-large {
+            width: 4px;
+            height: 4px;
+            animation: floatLarge 18s ease-in-out infinite;
+        }
+
+        @keyframes floatSmall {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(40px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatMedium {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(-40px) rotate(-360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatLarge {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(60px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .logo {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .info-section {
+                padding: 20px 25px;
+                margin: 0 20px;
+            }
+            
+            .info-title {
+                font-size: 14px;
+            }
+            
+            .info-text {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.jumpshare.com/preview/tKfsufD6W4CFXpl4HbsPQHuCvSvoq7yO_DRcauB424Td0S1ZZ22J1jbrQ7EiBIwU9MQh5fEYURtsZLsRq2TntMlo_1Afd2Yrh7Vr-mwAci76lPzXzjCU5fdS93l5FN_JzB6YvZ3CY8L3bo8w6vJshG6yjbN-I2pg_cnoHs_AmgI.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="stars" id="stars"></div>
+    <canvas id="smoke-canvas"></canvas>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://i.ibb.co/PzsHQ1bV/Screenshot-2026-02-04-013331-removebg-preview.png" alt="Ascended" class="logo" onclick="play()" style="cursor: pointer;">
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">Ascended is a Website for hosting Roblox scripts!</div>
+            <div class="info-text">
+                If you want to host ur script on ascended.lat DM <a href="https://discord.com/channels/@me/1466971739983450296" target="_blank" class="dm-link">za.1k</a> the price is 1$ to host with updates
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function play(){
+            var audio = document.getElementById("bgMusic");
+            audio.volume = 0.3;
+            audio.play();
+        }
+
+        // Create yellow twinkling stars
+        const starsContainer = document.getElementById('stars');
+        const starSizes = ['star-small', 'star-medium', 'star-large'];
+        
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star ' + starSizes[Math.floor(Math.random() * starSizes.length)];
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Enhanced ancient yellow fog effect
+        const canvas = document.getElementById('smoke-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class FogParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 100;
+                this.maxSize = Math.random() * 300 + 200; // Maximum size at peak
+                this.size = 0; // Start at 0
+                this.speedY = Math.random() * 0.3 + 0.1;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.maxOpacity = Math.random() * 0.08 + 0.04;
+                this.life = 0;
+                this.maxLife = Math.random() * 600 + 400;
+                this.peakLife = this.maxLife * 0.5; // Peak at 50% of lifetime
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.life++;
+                
+                // Calculate lifecycle ratio
+                const lifeRatio = this.life / this.maxLife;
+                
+                // Fade in and grow during first half, fade out and shrink during second half
+                if (this.life < this.peakLife) {
+                    // Growing phase - fade in
+                    const growRatio = this.life / this.peakLife;
+                    this.size = this.maxSize * growRatio;
+                    this.opacity = this.maxOpacity * growRatio;
+                } else {
+                    // Shrinking phase - fade out
+                    const shrinkRatio = (this.maxLife - this.life) / (this.maxLife - this.peakLife);
+                    this.size = this.maxSize * shrinkRatio;
+                    this.opacity = this.maxOpacity * shrinkRatio;
+                }
+                
+                if (this.life > this.maxLife || this.y < -this.maxSize) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                
+                // Ancient yellow gradient with current opacity
+                gradient.addColorStop(0, `rgba(201, 169, 97, ${this.opacity})`);
+                gradient.addColorStop(0.3, `rgba(232, 212, 160, ${this.opacity * 0.8})`);
+                gradient.addColorStop(0.6, `rgba(166, 136, 69, ${this.opacity * 0.5})`);
+                gradient.addColorStop(1, 'rgba(201, 169, 97, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Increased fog particles from 35 to 60
+        const fogParticles = [];
+        for (let i = 0; i < 60; i++) {
+            fogParticles.push(new FogParticle());
+        }
+
+        function animateFog() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            fogParticles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            requestAnimationFrame(animateFog);
+        }
+        animateFog();
+
+        // Enhanced floating particles - increased from 15 to 50
+        const particleTypes = ['particle-small', 'particle-medium', 'particle-large'];
+        
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle ' + particleTypes[Math.floor(Math.random() * particleTypes.length)];
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            
+            // Vary animation duration based on particle type
+            if (particle.classList.contains('particle-small')) {
+                particle.style.animationDuration = (Math.random() * 4 + 10) + 's';
+            } else if (particle.classList.contains('particle-medium')) {
+                particle.style.animationDuration = (Math.random() * 5 + 13) + 's';
+            } else {
+                particle.style.animationDuration = (Math.random() * 6 + 16) + 's';
+            }
+            
+            document.body.appendChild(particle);
+        }
+
+        // Resize canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
