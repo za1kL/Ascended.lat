@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doom - Doomsday</title>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/twFyFKDH/174794041-mystical-red-forest-light-and-soft-fog-a-path-along-the-trees-a-broken-tree-lying-on-the-b.webp">
+    <title>Doom</title>
+    <link rel="icon" type="image/png" href="https://cdn.discordapp.com/avatars/1263834388026621995/46c4ea7e75152c661e154633255e0f5d.webp?size=80">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -133,6 +133,23 @@
             animation: borderFlow 4s linear infinite;
             z-index: -1;
             opacity: 0.6;
+        }
+
+        .ascii-art {
+            text-align: center;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .ascii-art pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            line-height: 1.2;
+            color: var(--crimson);
+            text-shadow: 0 0 10px var(--crimson), 0 0 20px rgba(220, 20, 60, 0.5);
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: -1px;
         }
 
         @keyframes borderFlow {
@@ -354,10 +371,20 @@
     <div class="trees" id="trees"></div>
 
     <div class="card" id="card">
+        <div class="ascii-art">
+            <pre>
+ ██████╗  ██████╗  ██████╗ ███╗   ███╗
+ ██╔══██╗██╔═══██╗██╔═══██╗████╗ ████║
+ ██║  ██║██║   ██║██║   ██║██╔████╔██║
+ ██║  ██║██║   ██║██║   ██║██║╚██╔╝██║
+ ██████╔╝╚██████╔╝╚██████╔╝██║ ╚═╝ ██║
+ ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+            </pre>
+        </div>
         <div class="profile-header">
             <div class="avatar-container">
                 <div class="avatar-glow"></div>
-                <img src="https://i.ibb.co/twFyFKDH/174794041-mystical-red-forest-light-and-soft-fog-a-path-along-the-trees-a-broken-tree-lying-on-the-b.webp" alt="Doom" class="avatar">
+                <img src="https://cdn.discordapp.com/avatars/1263834388026621995/46c4ea7e75152c661e154633255e0f5d.webp?size=80" alt="Doom" class="avatar">
             </div>
             <div class="info">
                 <div class="username">Doom</div>
